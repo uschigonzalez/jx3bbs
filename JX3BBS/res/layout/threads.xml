@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.android.xiaow.jx3bbs"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg02"
+    android:orientation="vertical" >
+    
+   
+        
+<!-- 
+    <com.android.xiaow.jx3bbs.ui.viewflow.TitleFlowIndicator
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:gravity="center"
+        app:footerColor="#693519"
+        app:footerLineHeight="2dp"
+        app:footerTriangleHeight="10dp"
+        app:selectedColor="#af632b"
+        app:textColor="#693519"
+        app:textSize="13sp"
+        app:titlePadding="3dp" >
+    </com.android.xiaow.jx3bbs.ui.viewflow.TitleFlowIndicator>
+
+    <com.android.xiaow.jx3bbs.ui.viewflow.ViewFlow
+        xmlns:app="http://schemas.android.com/apk/res/com.android.xiaow.jx3bbs"
+        android:id="@+id/viewflow"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        app:sidebuffer="3" >
+    </com.android.xiaow.jx3bbs.ui.viewflow.ViewFlow> -->
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sliding="http://schemas.android.com/apk/res/com.android.xiaow.jx3bbs"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg02"
+    android:orientation="horizontal" >
+
+    <com.android.xiaow.jx3bbs.ui.component.SlidingGroup
+        android:id="@+id/sliding"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        sliding:defaultPostion="1"
+        sliding:offset="50dip" >
+
+        <com.android.xiaow.jx3bbs.ui.component.Settings
+            android:id="@+id/settings"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </com.android.xiaow.jx3bbs.ui.component.Settings>
+
+        <LinearLayout
+            android:id="@+id/root"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </LinearLayout>
+    </com.android.xiaow.jx3bbs.ui.component.SlidingGroup>
+
+</LinearLayout>
