@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:descendantFocusability="blocksDescendants" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="40.0dip"
+        android:background="@drawable/card_item_backgroud"
+        android:orientation="vertical"
+        android:paddingLeft="10.0dip"
+        android:paddingRight="10.0dip"
+        android:paddingTop="40.0dip" >
+
+        <com.android.xiaow.jx3bbs.ui.component.HTMLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5.0dip"
+            android:layout_marginTop="5.0dip"
+            android:layout_weight="1"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20.0dip"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginTop="5.0dip"
+            android:gravity="top"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:text="发表于：1970-01-01"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#b0b0b0" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:text="1#"
+                android:textColor="@color/yellow"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20.0dip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10.0dip" >
+
+        <com.android.xiaow.jx3bbs.ui.component.MaskImageView
+            android:id="@+id/imageView1"
+            android:layout_width="78.0dip"
+            android:layerType="software"
+            android:layout_height="78.0dip"
+            android:layout_marginTop="5.0dip"
+            android:src="@drawable/noavatar" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="15.0dip"
+            android:gravity="center"
+            android:text="1111111111"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="15.0dip"
+            android:gravity="center"
+            android:text="LV1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>
