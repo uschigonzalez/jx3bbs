@@ -4,7 +4,6 @@
  */
 package com.android.xiaow.jx3bbs.ui.fragment;
 
-import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -296,6 +295,7 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 			super.handleMessage(msg);
 			if (msg.what == CommandID.COMMAND_BERNDA
 					|| msg.what == CommandID.COMMAND_BERNDA_DB) {
+				Toast.makeText(pullListView.getContext(), "加载完成", 100).show();
 				Iterator<Integer> it = berndas.keySet().iterator();
 				List<Bernda> data = new ArrayList<Bernda>();
 				noticeData.clear();
@@ -370,8 +370,15 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 
 	@Override
 	public void onError(Response response) {
-		Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
-		loadFinish();
+		mHandler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), "加载失败", Toast.LENGTH_SHORT).show();
+				loadFinish();				
+			}
+		});
+		
 		// TODO Auto-generated method stub
 		// Log.d("BUG", response.getData().toString());
 	}
@@ -379,6 +386,12 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 	class BerndaAdapter extends BaseAdapter {
 		List<Bernda> datas;
 
+		int[] color = new int[] { R.drawable.item_back0, R.drawable.item_back1,
+				R.drawable.item_back2, R.drawable.item_back3,
+				R.drawable.item_back4, R.drawable.item_back5,
+				R.drawable.item_back6, R.drawable.item_back7,
+				R.drawable.item_back8, R.drawable.item_back9,
+				R.drawable.item_back10, R.drawable.item_back11 };
 		public BerndaAdapter(List<Bernda> datas) {
 			super();
 			this.datas = datas;
@@ -425,10 +438,11 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 				convertView.setTag(holder);
 			}
 			if (position % 2 == 0) {
-				convertView.setBackgroundColor(0xfff3fafb);// 浅色
+				convertView.setBackgroundResource(R.drawable.item_back12);// 浅色
 			} else {
-				convertView.setBackgroundColor(0xffd2e8fb);// 深色
+				convertView.setBackgroundResource(R.drawable.item_back13);// 深色
 			}
+//			convertView.setBackgroundResource(color[position%color.length]);
 			holder = (Holder) convertView.getTag();
 			Bernda bernda = getItem(position);
 			if (TextUtils.isEmpty(bernda.item)) {

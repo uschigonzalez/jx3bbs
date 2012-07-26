@@ -29,8 +29,6 @@ public class AreaItemAdpter extends CellAdapter {
 		this.mOnClickListener = l;
 	}
 
-
-
 	int textColor[];
 	int color[];
 	Comparator<MainArea> mParator = new Comparator<MainArea>() {
@@ -45,9 +43,15 @@ public class AreaItemAdpter extends CellAdapter {
 		this.data = data;
 		this.mContext = mContext;
 		Collections.sort(data, mParator);
-//		color = ColorUtil.generateTransitionalColor(0x00B3E4E3, 0x0075CDCC,
-//				data.size());
-		color=new int[]{0x0038CC,0xB000CC,0x00CC38,0xDF0056,0xFFA500,0x7EE000,0xFF7200,0xEDF900,0x3A00CC,0xFFD800,0x0089CC,0xFF1800};
+		// color = ColorUtil.generateTransitionalColor(0x00B3E4E3, 0x0075CDCC,
+		// data.size());
+
+		color = new int[] { R.drawable.item_back0, R.drawable.item_back1,
+				R.drawable.item_back2, R.drawable.item_back3,
+				R.drawable.item_back4, R.drawable.item_back5,
+				R.drawable.item_back6, R.drawable.item_back7,
+				R.drawable.item_back8, R.drawable.item_back9,
+				R.drawable.item_back10, R.drawable.item_back11 };
 		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
 				data.size());
 	}
@@ -59,8 +63,8 @@ public class AreaItemAdpter extends CellAdapter {
 
 	public void changeData(List<MainArea> data) {
 		this.data = data;
-//		color = ColorUtil.generateTransitionalColor(0x0095FFFD, 0x0003A4A2,
-//				data.size());
+		// color = ColorUtil.generateTransitionalColor(0x0095FFFD, 0x0003A4A2,
+		// data.size());
 		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
 				data.size());
 	}
@@ -89,9 +93,9 @@ public class AreaItemAdpter extends CellAdapter {
 		}
 		holder = (Holder) convertView.getTag();
 		holder.tv1.setText(data.get(position).name);
-		holder.tv2.setText(data.get(position).today+"");
+		holder.tv2.setText(data.get(position).today + "");
 		holder.tv2.setTextColor(0xff000000 + textColor[position]);
-		convertView.setBackgroundColor(0xff000000 +color[position%color.length]);
+		convertView.setBackgroundResource(color[position % color.length]);
 		holder.postion = position;
 		holder.mainArea = data.get(position);
 		convertView.setOnClickListener(mOnClickListener);
@@ -121,11 +125,9 @@ public class AreaItemAdpter extends CellAdapter {
 		public MainArea mainArea;
 	}
 
-	
-
 	@Override
 	public void initCellChildView(int postion, View view) {
-		
+
 	}
 
 }
