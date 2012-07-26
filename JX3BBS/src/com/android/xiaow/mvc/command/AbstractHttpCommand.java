@@ -88,7 +88,7 @@ public abstract class AbstractHttpCommand extends AbstractCommand {
 			}
 			HttpResponse rawResponse = client.execute(request);
 			// new GZIPInputStream(rawResponse.getEntity().getContent())
-			set_cookie= rawResponse.getFirstHeader("Set-Cookie").getValue();
+//			set_cookie= rawResponse.getFirstHeader("Set-Cookie").getValue();
 			if (rawResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				// If All-Iz-Well, give the sub-class the raw-response to
 				// process and generate Response-data

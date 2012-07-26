@@ -42,8 +42,8 @@
         <com.android.xiaow.jx3bbs.ui.fragment.MyListView
             android:id="@id/android:list"
             android:layout_width="fill_parent"
-            android:dividerHeight="0dip"
-            android:divider="@android:color/darker_gray"
+            android:dividerHeight="5dip"
+             android:divider="@color/transparent"
             android:layout_height="fill_parent" />
     </LinearLayout>
 
