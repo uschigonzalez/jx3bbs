@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.android.xiaow.jx3bbs.model.MainArea;
 import com.android.xiaow.mvc.controller.Controller;
@@ -94,5 +95,9 @@ private static MainBrachConn instance;
 			mAreas.add(mArea);
 		}
 		return mAreas;
+	}
+	public void executeSql(String sql){
+		db.execSQL(sql);
+		Log.d("BUG", "executeSql : "+sql.length());
 	}
 }

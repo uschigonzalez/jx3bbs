@@ -10,4 +10,5 @@ public class CommandID {
 	public static final int COMMAND_BERNDA_DB = Controller.COMMAND_ID_BASE + 4;
 	public static final int COMMAND_CARD = Controller.COMMAND_ID_BASE + 5;
 	public static final int COMMAND_IMAGE = Controller.COMMAND_ID_BASE + 6;
+	public static final int COMMAND_INIT = Controller.COMMAND_ID_BASE + 7;
 }

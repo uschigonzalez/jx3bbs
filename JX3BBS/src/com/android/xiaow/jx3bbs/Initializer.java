@@ -10,6 +10,7 @@ import com.android.xiaow.jx3bbs.command.BerndaDB;
 import com.android.xiaow.jx3bbs.command.BerndaList;
 import com.android.xiaow.jx3bbs.command.CardsCommand;
 import com.android.xiaow.jx3bbs.command.ImageDownLoad;
+import com.android.xiaow.jx3bbs.command.InitCommand;
 import com.android.xiaow.jx3bbs.command.JX3MainList;
 import com.android.xiaow.jx3bbs.command.MainAreaDB;
 import com.android.xiaow.jx3bbs.common.SubBoard;
@@ -32,7 +33,7 @@ public class Initializer {
 			ThreadPool.getInstance().registerCommand(CommandID.COMMAND_BERNDA_DB, BerndaDB.class);
 			ThreadPool.getInstance().registerCommand(CommandID.COMMAND_CARD,CardsCommand.class);
 			ThreadPool.getInstance().registerCommand(CommandID.COMMAND_IMAGE,ImageDownLoad.class);
-
+			ThreadPool.getInstance().registerCommand(CommandID.COMMAND_INIT	,InitCommand.class);
 		
 		SubBoard.addSubBoard("门派讨论区");
 		SubBoard.addSubBoard("研发交流区");
