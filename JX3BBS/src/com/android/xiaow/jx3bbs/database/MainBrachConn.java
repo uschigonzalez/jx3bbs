@@ -55,7 +55,7 @@ private static MainBrachConn instance;
 			values.put("newthread", mainArea.newthread);
 			values.put("url_last", mainArea.url_last);
 			values.put("last_name", mainArea.last_name);
-			db.insertWithOnConflict("MainBrach", "", values,
+			db.insertWithOnConflict("MainBrach", null, values,
 					SQLiteDatabase.CONFLICT_REPLACE);
 			;
 		}

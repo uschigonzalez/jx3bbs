@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -242,7 +243,7 @@ public class MyListView extends ListView implements OnScrollListener {
 	public void onFresh() {
 		state = REFRESHING;
 		setSelection(0);
-		headView.setPadding(0, 0, 0, 0);
+		headView.setPadding(0, headContentHeight, 0, 0);
 		changeHeaderViewByState();
 		onRefresh();
 	}
@@ -372,6 +373,32 @@ public class MyListView extends ListView implements OnScrollListener {
 	public void setAdapter(BaseAdapter adapter) {
 		lastUpdatedTextView.setText("this is in MyListView:"
 				+ sdf.format(new Date()));
+		if (adapter.getCount() == 0) {
+			footView.setVisibility(View.GONE);
+		}
+		adapter.registerDataSetObserver(new DataSetObserver() {
+
+			@Override
+			public void onChanged() {
+				super.onChanged();
+				if (getAdapter() != null) {
+					if (getAdapter().getCount() > 10) {
+						footView.setVisibility(View.VISIBLE);
+					}
+				}
+			}
+
+			@Override
+			public void onInvalidated() {
+				super.onInvalidated();
+				if (getAdapter() != null) {
+					if (getAdapter().getCount() > 10) {
+						footView.setVisibility(View.VISIBLE);
+					}
+				}
+			}
+
+		});
 		super.setAdapter(adapter);
 	}
 }

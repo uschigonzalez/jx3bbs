@@ -386,8 +386,9 @@ public	CellLayout.CellInfo findAllVacantCells(boolean[] occupied) {
 	
 
 	private void updateWallpaperOffset() {
-		updateWallpaperOffset(getChildAt(getChildCount() - 1).getRight()
-				- (getRight() - getLeft()));
+		/**某些机型上因为此代码而报错*/
+//		updateWallpaperOffset(getChildAt(getChildCount() - 1).getRight()
+//				- (getRight() - getLeft()));
 	}
 
 	private void updateWallpaperOffset(int scrollRange) {

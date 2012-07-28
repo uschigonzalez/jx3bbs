@@ -131,6 +131,9 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 			lists.put(mArea.name, mArea);
 			title.add(mArea.name);
 		}
+		/**
+		 * 在ActionBar上添加下拉菜单
+		 * */
 		actionBar.setListNavigationCallbacks(new ArrayAdapter<String>(this,
 				R.layout.sherlock_spinner_dropdown_item, title),
 				mOnNavigationListener);
@@ -155,6 +158,14 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 		}
 	};
 
+	/***
+	 * (非 Javadoc)
+	 * <p>Title: onCreateOptionsMenu</p>
+	 * <p>Description: 创建Menu即添加至Actionbar</p>
+	 * @param menu
+	 * @return
+	 * @see com.actionbarsherlock.app.SherlockFragmentActivity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.main_menu, menu);
@@ -183,6 +194,7 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	/**Action上按钮的点击**/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -273,6 +285,9 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 		rightFrag.setTitle(title);
 	}
 
+	/**
+	 * back按键 
+	 */
 	@Override
 	public void onBackPressed() {
 		if (!slidingGroup.isDefault()) {
