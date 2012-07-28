@@ -52,8 +52,8 @@ public class AreaItemAdpter extends CellAdapter {
 				R.drawable.item_back6, R.drawable.item_back7,
 				R.drawable.item_back8, R.drawable.item_back9,
 				R.drawable.item_back10, R.drawable.item_back11 };
-		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
-				data.size());
+//		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
+//				data.size());
 	}
 
 	@Override
@@ -65,8 +65,15 @@ public class AreaItemAdpter extends CellAdapter {
 		this.data = data;
 		// color = ColorUtil.generateTransitionalColor(0x0095FFFD, 0x0003A4A2,
 		// data.size());
-		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
-				data.size());
+//		textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
+//				data.size());
+	}
+	
+	public int[] getTextColor(){
+		if(textColor==null)
+			textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000,
+					data.size());
+		return textColor;
 	}
 
 	@Override
@@ -94,7 +101,7 @@ public class AreaItemAdpter extends CellAdapter {
 		holder = (Holder) convertView.getTag();
 		holder.tv1.setText(data.get(position).name);
 		holder.tv2.setText(data.get(position).today + "");
-		holder.tv2.setTextColor(0xff000000 + textColor[position]);
+		holder.tv2.setTextColor(0xFF000000+getTextColor()[position%getTextColor().length]);
 		convertView.setBackgroundResource(color[position % color.length]);
 		holder.postion = position;
 		holder.mainArea = data.get(position);

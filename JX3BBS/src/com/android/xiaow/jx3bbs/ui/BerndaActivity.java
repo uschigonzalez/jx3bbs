@@ -177,13 +177,11 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 		// menu.findItem(R.id.menu_search).setActionView(
 		// SearchViewCompat.newSearchView(this));
 		// } else {
-	
+
 		// .setActionView(new SearchView(this));
 		// }
 		return super.onCreateOptionsMenu(menu);
 	}
-
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -277,6 +275,9 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
+		if (!slidingGroup.isDefault()) {
+			slidingGroup.snapToDefault();
+		}
 		if (!isLandScape && leftFrag.isHidden()) {
 			ft = getSupportFragmentManager().beginTransaction();
 			ft.hide(rightFrag);
@@ -290,52 +291,51 @@ public class BerndaActivity extends SherlockFragmentActivity implements
 			super.onBackPressed();
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString("parent", parent);
-		outState.putString("url", url);
-		outState.putString("name", name);
-		outState.putString("area_url", cur_are.url);
-		outState.putString("area_name", cur_are.name);
-		outState.putInt("area_today", cur_are.today);
-		outState.putInt("area_newthread", cur_are.newthread);
-		outState.putInt("area_refuse", cur_are.refuse);
-		outState.putString("area_url_last", cur_are.url_last);
-		outState.putString("area_last_name", cur_are.last_name);
-		outState.putBoolean("area_isSubBroad", cur_are.isSubBroad);
-		outState.putString("area_parent", cur_are.parent);
-
-		if (!TextUtils.isEmpty(rightFrag.getUrl()))
-			outState.putString("right_url", rightFrag.getUrl());
-		if (!TextUtils.isEmpty(rightFrag.getTitle()))
-			outState.putString("right_title", rightFrag.getTitle());
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		parent = savedInstanceState.getString("parent");
-		loadActionList();
-		MainArea mainArea = new MainArea();
-		mainArea.url = savedInstanceState.getString("area_url");
-		mainArea.name = savedInstanceState.getString("area_name");
-		mainArea.today = savedInstanceState.getInt("area_today");
-		mainArea.newthread = savedInstanceState.getInt("area_newthread");
-		mainArea.refuse = savedInstanceState.getInt("area_refuse");
-		mainArea.url_last = savedInstanceState.getString("area_url_last");
-		mainArea.last_name = savedInstanceState.getString("area_last_name");
-		mainArea.isSubBroad = savedInstanceState.getBoolean("area_isSubBroad");
-		mainArea.parent = savedInstanceState.getString("area_parent");
-		if (leftFrag != null && leftFrag.isHidden()) {
-			leftFrag.refresh(mainArea);
-		}
-		if (rightFrag != null && rightFrag.isHidden()) {
-			if (!TextUtils.isEmpty(savedInstanceState.getString("right_title")))
-				rightFrag.setTitle(savedInstanceState.getString("right_title"));
-			if (!TextUtils.isEmpty(savedInstanceState.getString("right_url")))
-				rightFrag.loadUrl(savedInstanceState.getString("right_url"));
-		}
-	}
+//	@Override
+//	protected void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		outState.putString("parent", parent);
+//		outState.putString("url", url);
+//		outState.putString("name", name);
+//		if (cur_are != null) {
+//			outState.putString("area_url", cur_are.url);
+//			outState.putString("area_name", cur_are.name);
+//			outState.putInt("area_today", cur_are.today);
+//			outState.putInt("area_newthread", cur_are.newthread);
+//			outState.putInt("area_refuse", cur_are.refuse);
+//			outState.putString("area_url_last", cur_are.url_last);
+//			outState.putString("area_last_name", cur_are.last_name);
+//			outState.putBoolean("area_isSubBroad", cur_are.isSubBroad);
+//			outState.putString("area_parent", cur_are.parent);
+//		}
+//		outState.putString("right_url", rightFrag.getUrl());
+//		outState.putString("right_title", rightFrag.getTitle());
+//	}
+//
+//	@Override
+//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//		super.onRestoreInstanceState(savedInstanceState);
+//		parent = savedInstanceState.getString("parent");
+//		loadActionList();
+//		MainArea mainArea = new MainArea();
+//		mainArea.url = savedInstanceState.getString("area_url");
+//		mainArea.name = savedInstanceState.getString("area_name");
+//		mainArea.today = savedInstanceState.getInt("area_today");
+//		mainArea.newthread = savedInstanceState.getInt("area_newthread");
+//		mainArea.refuse = savedInstanceState.getInt("area_refuse");
+//		mainArea.url_last = savedInstanceState.getString("area_url_last");
+//		mainArea.last_name = savedInstanceState.getString("area_last_name");
+//		mainArea.isSubBroad = savedInstanceState.getBoolean("area_isSubBroad");
+//		mainArea.parent = savedInstanceState.getString("area_parent");
+//		if (leftFrag != null && leftFrag.isHidden()) {
+//			leftFrag.refresh(mainArea);
+//		}
+//		if (rightFrag != null && rightFrag.isHidden()) {
+//			if (!TextUtils.isEmpty(savedInstanceState.getString("right_title")))
+//				rightFrag.setTitle(savedInstanceState.getString("right_title"));
+//			if (!TextUtils.isEmpty(savedInstanceState.getString("right_url")))
+//				rightFrag.loadUrl(savedInstanceState.getString("right_url"));
+//		}
+//	}
 
 }

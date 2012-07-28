@@ -8,9 +8,11 @@
     launcher:cellHeight="@dimen/workspace_cell_height"
     launcher:cellWidth="@dimen/workspace_cell_width"
     launcher:longAxisCells="6"
-    launcher:longAxisEndPadding="0dip"
+    launcher:longAxisEndPadding="8dip"
     launcher:longAxisStartPadding="8dip"
+    launcher:WidthGap="5dp"
+    launcher:HeightGap="5dp"
     launcher:shortAxisCells="4"
     android:background="@drawable/bg02"
-    launcher:shortAxisEndPadding="0dip"
+    launcher:shortAxisEndPadding="8dip"
     launcher:shortAxisStartPadding="8dp" />

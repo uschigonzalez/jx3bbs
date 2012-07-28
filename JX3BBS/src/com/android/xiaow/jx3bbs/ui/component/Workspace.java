@@ -275,7 +275,7 @@ public class Workspace extends ViewGroup {
 	 * @param spanY
 	 *            The number of cells spanned vertically by the child.
 	 */
-	void addInCurrentScreen(View child, int x, int y, int spanX, int spanY) {
+public	void addInCurrentScreen(View child, int x, int y, int spanX, int spanY) {
 		addInScreen(child, mCurrentScreen, x, y, spanX, spanY, false);
 	}
 
@@ -297,7 +297,7 @@ public class Workspace extends ViewGroup {
 	 *            When true, the child is inserted at the beginning of the
 	 *            children list.
 	 */
-	void addInCurrentScreen(View child, int x, int y, int spanX, int spanY,
+public	void addInCurrentScreen(View child, int x, int y, int spanX, int spanY,
 			boolean insert) {
 		addInScreen(child, mCurrentScreen, x, y, spanX, spanY, insert);
 	}
@@ -319,7 +319,7 @@ public class Workspace extends ViewGroup {
 	 * @param spanY
 	 *            The number of cells spanned vertically by the child.
 	 */
-	void addInScreen(View child, int screen, int x, int y, int spanX, int spanY) {
+public	void addInScreen(View child, int screen, int x, int y, int spanX, int spanY) {
 		addInScreen(child, screen, x, y, spanX, spanY, false);
 	}
 
@@ -343,7 +343,7 @@ public class Workspace extends ViewGroup {
 	 *            When true, the child is inserted at the beginning of the
 	 *            children list.
 	 */
-	void addInScreen(View child, int screen, int x, int y, int spanX,
+public	void addInScreen(View child, int screen, int x, int y, int spanX,
 			int spanY, boolean insert) {
 		if (screen < 0 || screen >= getChildCount()) {
 			Log.e(TAG, "The screen must be >= 0 and < " + getChildCount()
@@ -368,7 +368,7 @@ public class Workspace extends ViewGroup {
 
 	}
 
-	CellLayout.CellInfo findAllVacantCells(boolean[] occupied) {
+public	CellLayout.CellInfo findAllVacantCells(boolean[] occupied) {
 		CellLayout group = (CellLayout) getChildAt(mCurrentScreen);
 		if (group != null) {
 			return group.findAllVacantCells(occupied, null);
