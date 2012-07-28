@@ -16,12 +16,16 @@ public class Settings extends LinearLayout {
 	RadioGroup radioGroup;
 	Button login;
 
+	
+
 	public Settings(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
+		super(context, attrs);
+		init();
 	}
 
 	public Settings(Context context) {
 		super(context);
+		init();
 	}
 
 	public Settings(Context context, AttributeSet attrs, int defStyle) {

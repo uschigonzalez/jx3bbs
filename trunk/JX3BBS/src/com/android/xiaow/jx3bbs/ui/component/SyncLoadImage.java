@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.xiaow.jx3bbs.Config;
 import com.android.xiaow.jx3bbs.command.ImageThread;
@@ -117,6 +118,7 @@ public class SyncLoadImage implements IResponseListener {
 		request.setData(url);
 		request.setTag(filePath);
 		System.out.println("Õº∆¨œ¬‘ÿ°£°£°£°£°£°£°£°£");
+		Log.d("MSG", "Õº∆¨µÿ÷∑£∫"+url);
 		ImageThread.enqueueCommand(request, this);
 	}
 

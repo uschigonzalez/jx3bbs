@@ -19,23 +19,21 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:maxLines="2"
-        android:padding="10.0dip"
+        android:layout_centerInParent="true"
+        android:padding="4.0dip"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:padding="10.0dip"
+		android:layout_below="@+id/textView1"
+        android:gravity="center"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/soft_grey" />
 
 </com.android.xiaow.jx3bbs.ui.component.MagnetView>

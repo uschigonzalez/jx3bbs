@@ -239,6 +239,14 @@ public class MyListView extends ListView implements OnScrollListener {
 		this.flag = flag;
 	}
 
+	public void onFresh() {
+		state = REFRESHING;
+		setSelection(0);
+		headView.setPadding(0, 0, 0, 0);
+		changeHeaderViewByState();
+		onRefresh();
+	}
+
 	private void changeHeaderViewByState() {
 		switch (state) {
 		case RELEASE_To_REFRESH:
