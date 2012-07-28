@@ -16,6 +16,7 @@ import org.apache.http.protocol.HTTP;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.xiaow.jx3bbs.utils.NetUtil;
 import com.android.xiaow.mvc.common.Response;
 
 /**
@@ -72,6 +73,11 @@ public abstract class AbstractHttpCommand extends AbstractCommand {
 	}
 
 	public void go() {
+		if (!NetUtil.checkNet()) {
+			setResponse(new Response());
+			getResponse().setError(true);
+			return;
+		}
 		HttpClient client = new DefaultHttpClient();
 		Object responseData = null;
 		Response response = getResponse() == null ? new Response()
@@ -88,7 +94,7 @@ public abstract class AbstractHttpCommand extends AbstractCommand {
 			}
 			HttpResponse rawResponse = client.execute(request);
 			// new GZIPInputStream(rawResponse.getEntity().getContent())
-//			set_cookie= rawResponse.getFirstHeader("Set-Cookie").getValue();
+			// set_cookie= rawResponse.getFirstHeader("Set-Cookie").getValue();
 			if (rawResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				// If All-Iz-Well, give the sub-class the raw-response to
 				// process and generate Response-data

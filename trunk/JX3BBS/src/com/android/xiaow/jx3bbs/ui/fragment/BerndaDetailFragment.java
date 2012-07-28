@@ -37,7 +37,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,7 +68,6 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 	private View mView;
 	private float mWeight;
 	private int marginLeft, marginRight, marginTop, marginBottom;
-	private ProgressBar bar;
 	MyListView pullListView;
 	String header = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html;charset=gb2312\"></head><body>";
 	String footer = "</body></html>";
@@ -117,7 +115,6 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.cardlist, null);
-		bar = (ProgressBar) mView.findViewById(R.id.progressBar1);
 		pullListView = (MyListView) mView.findViewById(android.R.id.list);
 		pullListView.setonRefreshListener(HeadRefreshListener);
 		mAdapter = new CardAdapter(new Cards());
@@ -162,20 +159,12 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 		visiblePosition = 0;
 		setTitle("");
 		reset();
-		if (!TextUtils.isEmpty(url)) {
-			bar.setVisibility(View.VISIBLE);
-			loadPage(1);
-		}else{
-			Log.d("BUG", "空的URL :" + url);
-		}
 		subffix="";
 	}
 
 	public void reflash() {
-		bar.setVisibility(View.VISIBLE);
 		cur_page = 1;
 		reset();
-		loadPage(1);
 	}
 
 	public void reset() {
@@ -188,6 +177,7 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 		}
 		pullListView.hideFoot();
 		pullListView.onRefreshComplete();
+		pullListView.onFresh();
 	}
 
 	private void loadPage(int index) {
@@ -227,7 +217,6 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == CommandID.COMMAND_CARD) {
-				bar.setVisibility(View.GONE);
 				Response response = (Response) msg.obj;
 				Cards cards = (Cards) response.getData();
 				maxPage = cards.max_page;
@@ -254,7 +243,6 @@ public class BerndaDetailFragment extends SherlockListFragment implements
 				pullListView.onRefreshComplete();
 				pullListView.onAddMoreComplete();
 			} else if (msg.what == 0x001) {
-				bar.setVisibility(View.GONE);
 				Toast.makeText(getActivity(), "加载失败!", Toast.LENGTH_LONG)
 						.show();
 				pullListView.onRefreshComplete();

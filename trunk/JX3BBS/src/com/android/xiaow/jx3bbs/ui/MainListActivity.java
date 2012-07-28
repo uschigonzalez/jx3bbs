@@ -151,8 +151,10 @@ public class MainListActivity extends BaseActivity {
 					work.addView(cellLayout);
 				}
 				List<MainArea> mainAreas = data.get(title.get(i));
+				int step=mainAreas.size();
+				
 				textColor = ColorUtil.generateTransitionalColor(0x00ff0000,
-						0x00000000, mainAreas.size());
+						0x00000000, Math.max(step, 3));
 				for (int j = 0; j < mainAreas.size(); j++) {
 					MainArea mainArea = mainAreas.get(j);
 					View view = buildView(mainArea, j);
@@ -172,7 +174,10 @@ public class MainListActivity extends BaseActivity {
 		tv1.setText(mainArea.name);
 		TextView tv2 = (TextView) view.findViewById(R.id.textView2);
 		tv2.setText(mainArea.today + "");
-		tv2.setTextColor(0xff000000 + textColor[position % textColor.length]);
+		int len = textColor.length;
+		int index = position % len;
+		if (index > -1 && index < len)
+			tv2.setTextColor(0xff000000 + textColor[index]);
 		view.setBackgroundResource(color[position % color.length]);
 		view.setOnClickListener(mOnClickListener);
 		view.setTag(mainArea);

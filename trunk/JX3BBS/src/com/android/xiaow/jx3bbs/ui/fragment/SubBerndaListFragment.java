@@ -167,7 +167,7 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 			return;
 		this.area=mainArea;
 		reset();
-//		loadPage(1, true);
+		loadPage(1, true);
 	}
 
 	/**
@@ -187,9 +187,10 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 		max_page = 0;
 		berndas.clear();
 		pullListView.onAddMoreComplete();
-//		pullListView.onFresh();
-		root.setVisibility(View.GONE);
-		bar.setVisibility(View.VISIBLE);
+		pullListView.onFresh();
+//		root.setVisibility(View.GONE);
+		bar.setVisibility(View.GONE);
+		
 	}
 
 	/**
