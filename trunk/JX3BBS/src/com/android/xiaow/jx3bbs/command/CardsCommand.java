@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.xiaow.jx3bbs.model.Card;
 import com.android.xiaow.jx3bbs.model.Cards;
@@ -44,6 +45,9 @@ public class CardsCommand extends AbstractHttpCommand {
 		Cards cards = new Cards();
 		List<Card> list = new ArrayList<Card>();
 			String html =HttpUtil.getResultFormResponse(response);
+			if(html.contains("∑Á”Í‰Ï‰Ï√ŒŒﬁ∫€")){
+				Log.d("BBB", "µ«¬º≥…π¶£∫∑Á”Í‰Ï‰Ï√ŒŒﬁ∫€£∫");
+			}
 			Element root = Jsoup.parse(html).body();
 			Element element = root.getElementById("postlist");
 			Elements ele1 = root.getElementsByAttributeValue("class", "pages");

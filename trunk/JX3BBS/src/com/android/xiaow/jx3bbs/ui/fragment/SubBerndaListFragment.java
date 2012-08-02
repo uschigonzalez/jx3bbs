@@ -297,7 +297,6 @@ public class SubBerndaListFragment extends SherlockListFragment implements
 			super.handleMessage(msg);
 			if (msg.what == CommandID.COMMAND_BERNDA
 					|| msg.what == CommandID.COMMAND_BERNDA_DB) {
-				Toast.makeText(pullListView.getContext(), "º”‘ÿÕÍ≥…", 100).show();
 				Iterator<Integer> it = berndas.keySet().iterator();
 				List<Bernda> data = new ArrayList<Bernda>();
 				noticeData.clear();

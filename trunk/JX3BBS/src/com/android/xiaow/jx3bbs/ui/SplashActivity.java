@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.android.xiaow.jx3bbs.CommandID;
@@ -18,6 +20,7 @@ import com.android.xiaow.jx3bbs.Initializer;
 import com.android.xiaow.jx3bbs.R;
 import com.android.xiaow.mvc.BaseActivity;
 import com.android.xiaow.mvc.Thread.ThreadPool;
+import com.android.xiaow.mvc.command.AbstractHttpCommand;
 import com.android.xiaow.mvc.common.Request;
 import com.android.xiaow.mvc.controller.Controller;
 
@@ -34,6 +37,10 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected int getContentViewID() {
 		sp = getSharedPreferences("JX3BBS", Context.MODE_APPEND);
+		AbstractHttpCommand.set_cookie = sp.getString("cookies", "");
+		if(!TextUtils.isEmpty(AbstractHttpCommand.set_cookie)){
+			Log.d("MSG", AbstractHttpCommand.set_cookie);
+		}
 		isFirst = sp.getBoolean("first", true);
 
 		SharedPreferences sp = Controller.getInstance().getApplicationContext()

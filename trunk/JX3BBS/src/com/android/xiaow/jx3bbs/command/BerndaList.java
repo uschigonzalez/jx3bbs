@@ -14,6 +14,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.util.Log;
+
 import com.android.xiaow.jx3bbs.database.BerndaConn;
 import com.android.xiaow.jx3bbs.model.Bernda;
 import com.android.xiaow.jx3bbs.model.BerndaListResponse;
@@ -53,6 +55,9 @@ public class BerndaList extends AbstractHttpCommand {
 		String str;
 		try {
 			str = HttpUtil.getResultFormResponse(response);
+			if(str.contains("风雨潇潇梦无痕")){
+				Log.d("BBB", "登录成功：风雨潇潇梦无痕：");
+			}
 			Document doc = Jsoup.parse(str);
 			// 获取<div class="pages"...></div>标签，该标签包含了帖子列表的页数
 			Elements pages = doc.getElementsByAttributeValue("class", "pages");

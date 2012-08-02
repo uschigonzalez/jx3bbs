@@ -1,6 +1,7 @@
 package com.android.xiaow.jx3bbs.ui.component;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,11 @@ import android.widget.Toast;
 
 import com.android.xiaow.jx3bbs.Config;
 import com.android.xiaow.jx3bbs.R;
+import com.android.xiaow.jx3bbs.ui.LoginActivity;
 
 public class Settings extends LinearLayout {
 	RadioGroup radioGroup;
 	Button login;
-
-	
 
 	public Settings(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -82,7 +82,8 @@ public class Settings extends LinearLayout {
 
 		@Override
 		public void onClick(View v) {
-			Toast.makeText(getContext(), "µÈ´ýÊµÏÖ", Toast.LENGTH_SHORT).show();
+			getContext().startActivity(
+					new Intent(getContext(), LoginActivity.class));
 		}
 	};
 }
