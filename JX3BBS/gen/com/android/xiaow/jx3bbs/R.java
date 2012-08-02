@@ -1375,10 +1375,10 @@ containing a value of this type.
         public static final int abs__titleDivider=0x7f07001e;
         public static final int abs__up=0x7f07000b;
         public static final int button1=0x7f070041;
-        public static final int cell1=0x7f07004b;
-        public static final int cell2=0x7f07004c;
-        public static final int cell3=0x7f07004d;
-        public static final int celllayout1=0x7f070042;
+        public static final int cell1=0x7f07004c;
+        public static final int cell2=0x7f07004d;
+        public static final int cell3=0x7f07004e;
+        public static final int celllayout1=0x7f070043;
         public static final int checkBox1=0x7f070040;
         public static final int disableHome=0x7f070009;
         public static final int fill=0x7f070011;
@@ -1395,18 +1395,18 @@ containing a value of this type.
         public static final int linearLayout1=0x7f070031;
         public static final int listMode=0x7f070002;
         public static final int listView1=0x7f070035;
-        public static final int login=0x7f070049;
-        public static final int menu_refresh=0x7f07004e;
+        public static final int login=0x7f07004a;
+        public static final int menu_refresh=0x7f07004f;
         public static final int normal=0x7f070001;
         public static final int password=0x7f07003f;
         public static final int progressBar1=0x7f070034;
         public static final int progressBar2=0x7f070038;
-        public static final int radio0=0x7f070044;
-        public static final int radio1=0x7f070045;
-        public static final int radio2=0x7f070046;
-        public static final int radio3=0x7f070047;
-        public static final int radio4=0x7f070048;
-        public static final int radioGroup1=0x7f070043;
+        public static final int radio0=0x7f070045;
+        public static final int radio1=0x7f070046;
+        public static final int radio2=0x7f070047;
+        public static final int radio3=0x7f070048;
+        public static final int radio4=0x7f070049;
+        public static final int radioGroup1=0x7f070044;
         public static final int root=0x7f07002e;
         public static final int settings=0x7f07002d;
         public static final int showCustom=0x7f070008;
@@ -1422,7 +1422,8 @@ containing a value of this type.
         public static final int textView5=0x7f070030;
         public static final int useLogo=0x7f070004;
         public static final int username=0x7f07003e;
-        public static final int workspace=0x7f07004a;
+        public static final int webView1=0x7f070042;
+        public static final int workspace=0x7f07004b;
         public static final int wrap_content=0x7f070000;
     }
     public static final class integer {
@@ -1460,14 +1461,15 @@ containing a value of this type.
         public static final int indeterminate_progress_action=0x7f03001c;
         public static final int list=0x7f03001d;
         public static final int login=0x7f03001e;
-        public static final int refuse=0x7f03001f;
-        public static final int screen=0x7f030020;
-        public static final int settings=0x7f030021;
-        public static final int sherlock_spinner_dropdown_item=0x7f030022;
-        public static final int sherlock_spinner_item=0x7f030023;
-        public static final int splash=0x7f030024;
-        public static final int threads=0x7f030025;
-        public static final int workspace=0x7f030026;
+        public static final int login2=0x7f03001f;
+        public static final int refuse=0x7f030020;
+        public static final int screen=0x7f030021;
+        public static final int settings=0x7f030022;
+        public static final int sherlock_spinner_dropdown_item=0x7f030023;
+        public static final int sherlock_spinner_item=0x7f030024;
+        public static final int splash=0x7f030025;
+        public static final int threads=0x7f030026;
+        public static final int workspace=0x7f030027;
     }
     public static final class menu {
         public static final int main_menu=0x7f0d0000;

@@ -15,6 +15,7 @@ import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.CookieManager;
 
 import com.android.xiaow.jx3bbs.utils.NetUtil;
 import com.android.xiaow.mvc.common.Response;
@@ -88,9 +89,24 @@ public abstract class AbstractHttpCommand extends AbstractCommand {
 		Log.i("AbstractHttpCommand", "Created the request: " + client
 				+ ", for request: " + request);
 		try {
-			request.addHeader("Accept-Encoding", "gzip");
+			// (Request-Line) GET / HTTP/1.1
+			request.addHeader("Accept", "text/html, application/xhtml+xml, */*");
+			request.addHeader("Accept-Encoding", "gzip, deflate");
+			request.addHeader("Accept-Language", "zh-CN");
+			request.addHeader("Connection", "Keep-Alive");
+			// Cookie bbs_sid=ALWYRyAb3813435529430.79364300;
+			// CNZZDATA30049344=cnzz_eid=99017672-1343552948-&ntime=1343552948&cnzz_a=0&retime=1343552945333&sin=&ltime=1343552945333&rtime=0;
+			// CNZZDATA30023918=cnzz_eid=49510413-1343552948-&ntime=1343552948&cnzz_a=0&retime=1343552946336&sin=&ltime=1343552946336&rtime=0;
+			// CNZZDATA2409549=cnzz_eid=86583548-1343552948-&ntime=1343552948&cnzz_a=0&retime=1343552946346&sin=&ltime=1343552946346&rtime=0;
+			// CNZZDATA2437048=cnzz_eid=85662301-1343552948-&ntime=1343552948&cnzz_a=0&retime=1343552949356&sin=&ltime=1343552949356&rtime=0;
+			// CNZZDATA30066334=cnzz_eid=45605747-1343552953-&ntime=1343552953&cnzz_a=0&retime=1343552954649&sin=&ltime=1343552954649&rtime=0
+			request.addHeader("Host", "jx3.bbs.xoyo.com");
+			request.addHeader("User-Agent",
+					"Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+			// set_cookie=CookieManager.getInstance().getCookie("jx3.bbs.xoyo.com");
 			if (!TextUtils.isEmpty(set_cookie)) {
 				request.setHeader("Set-Cookie", set_cookie);
+				request.setHeader("Cookie", set_cookie);
 			}
 			HttpResponse rawResponse = client.execute(request);
 			// new GZIPInputStream(rawResponse.getEntity().getContent())

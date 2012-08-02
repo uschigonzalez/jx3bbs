@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.xiaow.jx3bbs"
-    android:versionCode="5"
-    android:versionName="0.1.2012072805.02" >
+    android:versionCode="7"
+    android:versionName="0.1.2012072901.02" >
 
     <!-- 文件相关权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -39,13 +39,13 @@
         </activity>
         <activity
             android:name=".ui.MainListActivity"
-             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
 
             <!--
 			android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden"
             -->
         </activity>
         <activity
@@ -56,7 +56,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AndroidDevelopers" >
         </activity>
-        <activity android:name=".ui.LoginActivity" >
+        <activity
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

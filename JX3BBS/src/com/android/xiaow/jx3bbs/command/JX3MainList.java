@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.xiaow.jx3bbs.CommandID;
 import com.android.xiaow.jx3bbs.Initializer;
@@ -48,7 +49,9 @@ public class JX3MainList extends AbstractHttpCommand {
 		List<MainArea> datas = new ArrayList<MainArea>();
 
 		String str = HttpUtil.getResultFormResponse(response);
-
+		if(str.contains("风雨潇潇梦无痕")){
+			Log.d("BBB", "登录成功：风雨潇潇梦无痕：");
+		}
 		Document doc = Jsoup.parse(str);
 		/**
 		 * id:wrap的标签为主题内容root标签
