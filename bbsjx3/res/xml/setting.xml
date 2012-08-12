@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="设置" >
+
+    <ListPreference
+        android:entries="@array/setting_list_item_name"
+        android:entryValues="@array/setting_list_item_value"
+        android:dialogTitle="图片下载"
+        android:summary="设置图片下载模式"
+        android:key="image_down"
+        android:defaultValue="0"
+        android:title="图片下载" />
+
+</PreferenceScreen>
