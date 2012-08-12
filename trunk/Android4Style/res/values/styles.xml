@@ -6,6 +6,7 @@
     </style>
 
     <style name="Widget.Holo.ProgressBar.Horizontal" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateOnly">true</item>
         <item name="android:progressDrawable">@drawable/progress_horizontal_holo_dark</item>
         <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo</item>
         <item name="android:minHeight">16dip</item>
