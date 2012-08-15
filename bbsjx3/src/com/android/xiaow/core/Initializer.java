@@ -12,6 +12,7 @@ import com.android.xiaow.jx3bbs.cmds.BranchListCommand;
 import com.android.xiaow.jx3bbs.cmds.CardCommand;
 import com.android.xiaow.jx3bbs.cmds.InitCommand;
 import com.android.xiaow.jx3bbs.cmds.InitMainListCommand;
+import com.android.xiaow.jx3bbs.cmds.ReplayCommand;
 
 /**
  * @author xiaowei
@@ -23,6 +24,7 @@ public class Initializer {
     public static final int INIT_MAIN_BRACH_CMD_ID = 0x1003;
     public static final int BRANCH_LIST_CMD_ID = 0x1004;
     public static final int CARD_CMD_ID = 0x1005;
+    public static final int REPLAY_CMD_ID = 0x1006;
 
     public static void ensureInitialized() {
         DefaultFilter imageFilter = new DefaultFilter(ThreadPoolConfig.MAX_IMAGE_DOWN);
@@ -34,5 +36,6 @@ public class Initializer {
         filter.registerCommandId(INIT_MAIN_BRACH_CMD_ID, InitMainListCommand.class.getName());
         filter.registerCommandId(BRANCH_LIST_CMD_ID, BranchListCommand.class.getName());
         filter.registerCommandId(CARD_CMD_ID, CardCommand.class.getName());
+        filter.registerCommandId(REPLAY_CMD_ID, ReplayCommand.class.getName());
     }
 }

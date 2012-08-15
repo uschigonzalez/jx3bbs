@@ -201,7 +201,14 @@ public class BranchListActivity extends BaseFragmentActivity implements
     public void navigationSelected(MainArea mArea) {
         if (fragment != null) {
             mCallBack = fragment;
+            if (!slidingGroup.isDefault()) {
+                slidingGroup.snapToDefault();
+            }
+            if (fragment.isHidden()) {
+                getSupportFragmentManager().popBackStack();
+            }
             fragment.loadBranch(mArea);
+
         } else {
             fragment = new BranchListFragment();
             mCallBack = fragment;

@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +33,7 @@ import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Request;
 import com.android.xiaow.core.common.Response;
 import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
+import com.android.xiaow.jx3bbs.cmds.ReplayRequest;
 import com.android.xiaow.jx3bbs.model.Card;
 import com.android.xiaow.jx3bbs.model.Cards;
 import com.android.xiaow.jx3bbs.model.MainArea;
@@ -145,6 +147,20 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             listView.hideFoot();
         }
         onLoadComplete();
+        Log.d("MSG", "formhash" + cards.formhash + ",subject" + cards.subject + ",usesig"
+                + cards.usesig);
+
+        String str = url.substring(url.indexOf("tid="));
+        ReplayRequest replayRequest = new ReplayRequest();
+        replayRequest.url = "http://jx3.bbs.xoyo.com/post.php?action=reply&fid=7101&"
+                + str
+                + "&extra=page%3D1&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined";
+        Log.d("MSG", "url=" + replayRequest.url);
+        replayRequest.formhash = cards.formhash;
+        replayRequest.subject = cards.subject;
+        replayRequest.usesig = cards.usesig;
+        Controller.getIntance().registerCommand(Initializer.REPLAY_CMD_ID, replayRequest);
+
     }
 
     @Override
@@ -214,8 +230,15 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             }
             holder.v5.setText((postion + 1) + "#");
             holder.position = postion;
-            AsyncImageLoad.LoadImage(getItem(postion).image_au1, AsyncImageLoad.GRAVATAR,
-                    holder.m1, null);
+            holder.m1.setImageResource(R.drawable.noavatar);
+            String url = getItem(postion).image_au1;
+            if (!TextUtils.isEmpty(url)
+                    && !"http://jx3.bbs.xoyo.com/images/avatars/noavatar.gif".equals(url)
+                    && !"jx3.bbs.xoyo.com/images/avatars/noavatar.gif".equals(url)) {
+
+                AsyncImageLoad.LoadImage(getItem(postion).image_au1, AsyncImageLoad.GRAVATAR,
+                        holder.m1, null);
+            }
             // ImageViewObserver observer = new ImageViewObserver(holder.m1,
             // false);
             // SyncLoadImage.getIntance().LoadBitmap(getItem(postion).image_au1,

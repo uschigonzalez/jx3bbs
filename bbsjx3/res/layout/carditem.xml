@@ -7,11 +7,11 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="40.0dip"
         android:background="@drawable/card_item_backgroud"
         android:orientation="vertical"
         android:paddingLeft="10.0dip"
         android:paddingRight="10.0dip"
+        android:layout_marginTop="40dp"
         android:paddingTop="40.0dip" >
 
         <com.android.xiaow.jx3bbs.widget.HTMLayout

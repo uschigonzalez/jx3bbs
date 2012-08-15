@@ -20,7 +20,7 @@ public class ThreadPoolConfig {
 	/** ͬʱ�����ļ����߳��� */
 	public static final int MAX_FILE_DOWN = 3;
 	/** ͬʱ����ͼƬ���߳��� */
-	public static final int MAX_IMAGE_DOWN = 1;
+	public static final int MAX_IMAGE_DOWN = 3;
 	/** ��Ƶ�����߳� */
 	public static final int MAX_AUDIO_PLAY = 1;
 }
