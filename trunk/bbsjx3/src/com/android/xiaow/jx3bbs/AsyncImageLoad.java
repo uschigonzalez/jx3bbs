@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -62,13 +63,15 @@ public class AsyncImageLoad {
         boolean down = false;
         if (mode == 0 && NetUtil.checkWifi()) {
             down = true;
-        } else if (mode == 1 || type == IMAGE || type == SMILE) {
+        } else if (mode == 1 &&( type == IMAGE || type == SMILE)) {
             down = true;
-        } else if (mode == 2 || type == GRAVATAR || type == SMILE) {
+        } else if (mode == 2 && (type == GRAVATAR || type == SMILE)) {
             down = true;
         } else if (mode == 3) {
             down = true;
         }
+        Log.d("MSG", "mode:" + mode + "," + NetUtil.checkWifi() + "," + type+","+down);
+
         com.android.xiaow.core.image.AsyncImageLoad.getIntance().loadImage(url,
                 getPathByType(url, type), imageView, callBack, down);
     }

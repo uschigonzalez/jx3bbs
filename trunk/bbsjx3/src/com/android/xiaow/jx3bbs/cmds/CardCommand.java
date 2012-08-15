@@ -64,6 +64,20 @@ public class CardCommand extends BaseHttpCommand {
             Log.d("BBB", "登录成功：风雨潇潇梦无痕：");
         }
         Element root = Jsoup.parse(html).body();
+      Elements _formhash= root.getElementsByAttributeValue("name", "formhash");
+      if(_formhash!=null&&_formhash.size()>0){
+          cards.formhash=_formhash.get(0).attributes().get("value");
+      }
+      Elements  subject=root.getElementsByAttributeValue("name", "subject");
+      if(subject!=null&&subject.size()>0){
+          cards.subject=subject.get(0).attributes().get("value");
+      }
+      Elements  usesig= root.getElementsByAttributeValue("name", "usesig");
+      if(usesig!=null&&usesig.size()>0){
+          cards.usesig=usesig.get(0).attributes().get("value");
+      }
+//        subject
+//        usesig
         Element element = root.getElementById("postlist");
         Elements ele1 = root.getElementsByAttributeValue("class", "pages");
         if (ele1.size() > 0 && ele1.get(0).outerHtml().contains("下一页")) {

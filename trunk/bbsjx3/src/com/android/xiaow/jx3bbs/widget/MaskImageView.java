@@ -50,7 +50,7 @@ public class MaskImageView extends ImageView {
 		paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setColor(0xfff3fafb);
-		paint.setStrokeWidth(2);
+		paint.setStrokeWidth(5);
 		paint.setStyle(Style.STROKE);
 		canvas.drawPath(clip, paint);
 
