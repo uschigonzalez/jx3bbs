@@ -25,10 +25,12 @@ import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.Initializer;
 import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Response;
+import com.android.xiaow.core.util.ToastUtil;
 import com.android.xiaow.jx3bbs.cmds.BranchRequest;
 import com.android.xiaow.jx3bbs.cmds.BranchResponse;
 import com.android.xiaow.jx3bbs.model.Bernda;
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.RefuseInfo;
 import com.android.xiaow.jx3bbs.widget.PushListView;
 import com.android.xiaow.jx3bbs.widget.PushListView.OnRefreshListener;
 
@@ -50,6 +52,7 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     int page = 1;
     int page_max;
     BranchListAdapter mAdapter;
+    RefuseInfo mInfo;
     List<Bernda> noties = new ArrayList<Bernda>();
 
     public static interface CallBack {
@@ -108,7 +111,8 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        if (mCallBack != null && v.getTag() instanceof BranchListAdapter.Holder) {
+        if (mCallBack != null && v.getTag() instanceof BranchListAdapter.Holder && (position > 0)
+                && position <= mAdapter.getCount()) {
             mCallBack.itemSelected(mAdapter.getItem(position - 1).name,
                     mAdapter.getItem(position - 1).url);
         }
@@ -141,6 +145,7 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     @Override
     public void onReset() {
         // TODO:reset
+        mInfo=null;
         listView.onFresh();
         listView.hideFoot();
         mAdapter = new BranchListAdapter(new ArrayList<Bernda>(), getActivity());
@@ -180,6 +185,14 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
         listView.onRefreshComplete();
         if (mCallBack != null)
             mCallBack.resetEnd();
+        mInfo=new RefuseInfo();
+        mInfo.formhash=response.formhash;
+        mInfo.fid=response.fid;
+        mInfo.gid=response.gid;
+        mInfo.tid=response.tid;
+        // ReplayRequest request=new ReplayRequest();
+        // request.formhash=response.formhash;
+        // Controller.getIntance().registerCommand(Initializer.THREAD_CMD_ID,request);
     }
 
     @Override
@@ -189,8 +202,13 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
         if (mCallBack != null)
             mCallBack.resetEnd();
         page = Math.max(1, --page);
+        ToastUtil.show(response.errorMsg);
     }
 
-   
+    @Override
+    public RefuseInfo getInfo() {
+        // TODO Auto-generated method stub
+        return mInfo;
+    }
 
 }

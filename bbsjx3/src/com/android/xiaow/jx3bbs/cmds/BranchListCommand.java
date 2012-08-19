@@ -76,6 +76,46 @@ public class BranchListCommand extends BaseHttpCommand {
             }
 
             Document doc = Jsoup.parse(str);
+            Element _modedby = doc.getElementById("modedby");
+            if (_modedby != null) {
+                Log.d("MSG", "modedby------->" + _modedby.outerHtml().replaceAll("<[^>]*>", ""));
+            }
+            Element root = doc.body();
+            Elements _formhash = root.getElementsByAttributeValue("name", "formhash");
+            if (_formhash != null && _formhash.size() > 0) {
+                bResponse.formhash = _formhash.get(0).attributes().get("value");
+            }
+            Elements listextra = root.getElementsByAttributeValue("name", "listextra");
+            if (listextra != null && listextra.size() > 0) {
+                bResponse.listextra = _formhash.get(0).attributes().get("value");
+            }
+            Matcher matcher = Pattern.compile("gid[^<]*").matcher(str);
+            if (matcher.find()) {
+                String sids = matcher.group();
+                Log.d("BBB", sids);
+                String[] sid = sids.split(",");
+                for (String _sid : sid) {
+                    if (_sid.trim().indexOf("gid") > -1) {
+                        matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                        if (matcher.find()) {
+                            bResponse.gid = matcher.group();
+                        }
+                    } else if (_sid.trim().indexOf("fid") > -1) {
+                        matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                        if (matcher.find()) {
+                            bResponse.fid = matcher.group();
+                        }
+                    } else if (_sid.trim().indexOf("tid") > -1) {
+                        matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                        if (matcher.find()) {
+                            bResponse.tid = matcher.group();
+                        }
+                    } 
+                }
+                Log.d("BBB", "gid = "+bResponse.gid+",fid="+bResponse.fid+",tid="+bResponse.tid);
+            }
+            
+            
             // 获取<div class="pages"...></div>标签，该标签包含了帖子列表的页数
             Elements pages = doc.getElementsByAttributeValue("class", "pages");
             int cur_page = -1;

@@ -42,7 +42,7 @@ public class ImageDownCommand extends BaseHttpCommand {
             }
         } else
             super.execute();
-//        Log.d("MSG", path + "," + url);
+        // Log.d("MSG", path + "," + url);
 
     }
 

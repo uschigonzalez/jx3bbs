@@ -28,7 +28,9 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -98,8 +100,7 @@ public class HTMLayout extends LinearLayout {
     private String loadSrc(InputStream is) {
         String str = "";
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    is, "UTF-8"));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer buffer = new StringBuffer();
             String str1 = "";
             while ((str1 = reader.readLine()) != null) {
@@ -113,16 +114,14 @@ public class HTMLayout extends LinearLayout {
     }
 
     public void parserContent(String src) {
-        src = src.replace("src=\"images",
-                "src=\"http://jx3.bbs.xoyo.com/images");
+        src = src.replace("src=\"images", "src=\"http://jx3.bbs.xoyo.com/images");
         Matcher m = Pattern.compile(regex_img_0).matcher(src);
         int src_len = src.length();
         int src_start = 0;
         while (m.find()) {
             String str = m.group();
             if (str.contains("http://jx3.bbs.xoyo.com/")
-                    && !(str.contains("file=") && !str
-                            .contains("file=\"http://jx3.bbs"))) {
+                    && !(str.contains("file=") && !str.contains("file=\"http://jx3.bbs"))) {
                 continue;
             }
             int start = m.start();
@@ -139,8 +138,7 @@ public class HTMLayout extends LinearLayout {
                 }
                 Matcher ma = Pattern.compile("</[^>]+>").matcher(src);
                 while (ma.find()) {
-                    if (ma.start() == 0
-                            || src.substring(0, ma.start()).matches("</[^>]+>")) {
+                    if (ma.start() == 0 || src.substring(0, ma.start()).matches("</[^>]+>")) {
                         String tmp = ma.group();
                         str1 += tmp;
                         length += tmp.length();
@@ -165,8 +163,7 @@ public class HTMLayout extends LinearLayout {
         int len = data.size();
         String str = "";
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER;
         params.topMargin = 10;
         for (int i = 0; i < len; i++) {
@@ -190,12 +187,13 @@ public class HTMLayout extends LinearLayout {
                     continue;
                 }
                 AsyncImageLoad.LoadImage(url, AsyncImageLoad.IMAGE, imv, null);
-//                AsyncImageLoad.getIntance().loadImage(url, path, imv, null);
-//                ImageViewObserver observer = new ImageViewObserver(imv, true);
-//                SyncLoadImage.getIntance().LoadBitmap(url, observer,
-//                        SyncLoadImage.IMAGE);
-//                imv.setTag(SyncLoadImage
-//                        .getPathByType(url, SyncLoadImage.IMAGE));
+                // AsyncImageLoad.getIntance().loadImage(url, path, imv, null);
+                // ImageViewObserver observer = new ImageViewObserver(imv,
+                // true);
+                // SyncLoadImage.getIntance().LoadBitmap(url, observer,
+                // SyncLoadImage.IMAGE);
+                // imv.setTag(SyncLoadImage
+                // .getPathByType(url, SyncLoadImage.IMAGE));
                 imv.setFocusable(false);
                 imv.setOnClickListener(mImageClickListener);
                 addView(imv);
@@ -210,8 +208,7 @@ public class HTMLayout extends LinearLayout {
                     continue;
                 }
                 if (str.contains("<blockquote>")) {
-                    str = str.replace("<blockquote>",
-                            "<blockquote bgcolor=\"#88BABCBC\">");
+                    str = str.replace("<blockquote>", "<blockquote bgcolor=\"#88BABCBC\">");
                 }
                 List<String> s1 = new ArrayList<String>();
                 if (str.contains("<img")) {
@@ -228,37 +225,40 @@ public class HTMLayout extends LinearLayout {
                 } else {
                     s1.add(str);
                 }
-                TextView tv = new TextView(getContext());
-//              SpannableStringBuilder spanned = new SpannableStringBuilder();
-//              for (int j = 0; j < s1.size(); j++) {
-//                  String s0 = s1.get(j).trim();
-//                  if (s0.startsWith("<img")) {
-//                      UrlDrawable urlDrawable = new UrlDrawable();
-//                      urlDrawable.drawable = getResources().getDrawable(
-//                              R.drawable.j01);
-//                      int start = s0.indexOf("\"");
-//                      int end = s0.indexOf("\"", start + 2);
-//                      String url = s0.substring(start + 1, end);
-//                      ImageGetter imageGetter = new ImageGetter();
-//                      imageGetter.view = tv;
-//                      SpannableString spannableString = new SpannableString(
-//                              "face");
-//                      ImageSpan span = new ImageSpan(urlDrawable,
-//                              ImageSpan.ALIGN_BOTTOM);
-//                      spannableString.setSpan(span, 0, 4,
-//                              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                      UrldrawableObserver observer = new UrldrawableObserver(
-//                              tv, urlDrawable);
-//                      SyncLoadImage.getIntance().LoadBitmap(url, observer,
-//                              SyncLoadImage.SMILE);
-//                      spanned.append(spannableString);
-//                  } else {
-//                      ImageGetter mImageGetter = new ImageGetter();
-//                      mImageGetter.view = tv;
-//                      Spanned sp = Html.fromHtml(s0, mImageGetter, null);
-//                      spanned.append(sp);
-//                  }
-//              }
+                EditText tv = (EditText)LayoutInflater.from(getContext()).inflate(R.layout.selectedtext, null, false);
+                tv.setFocusable(true);
+                tv.setFocusableInTouchMode(true);
+                // SpannableStringBuilder spanned = new
+                // SpannableStringBuilder();
+                // for (int j = 0; j < s1.size(); j++) {
+                // String s0 = s1.get(j).trim();
+                // if (s0.startsWith("<img")) {
+                // UrlDrawable urlDrawable = new UrlDrawable();
+                // urlDrawable.drawable = getResources().getDrawable(
+                // R.drawable.j01);
+                // int start = s0.indexOf("\"");
+                // int end = s0.indexOf("\"", start + 2);
+                // String url = s0.substring(start + 1, end);
+                // ImageGetter imageGetter = new ImageGetter();
+                // imageGetter.view = tv;
+                // SpannableString spannableString = new SpannableString(
+                // "face");
+                // ImageSpan span = new ImageSpan(urlDrawable,
+                // ImageSpan.ALIGN_BOTTOM);
+                // spannableString.setSpan(span, 0, 4,
+                // Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                // UrldrawableObserver observer = new UrldrawableObserver(
+                // tv, urlDrawable);
+                // SyncLoadImage.getIntance().LoadBitmap(url, observer,
+                // SyncLoadImage.SMILE);
+                // spanned.append(spannableString);
+                // } else {
+                // ImageGetter mImageGetter = new ImageGetter();
+                // mImageGetter.view = tv;
+                // Spanned sp = Html.fromHtml(s0, mImageGetter, null);
+                // spanned.append(sp);
+                // }
+                // }
                 ImageGetter mImageGetter = new ImageGetter();
                 mImageGetter.view = tv;
                 Spanned spanned = Html.fromHtml(str, mImageGetter, null);
@@ -283,10 +283,8 @@ public class HTMLayout extends LinearLayout {
             if (str.size() < 1)
                 return;
             if (str.size() == 1) {
-                Intent it = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(str.get(0)));
-                it.addCategory(Intent.CATEGORY_BROWSABLE).addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse(str.get(0)));
+                it.addCategory(Intent.CATEGORY_BROWSABLE).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(it);
             } else {
                 // Dialog dialog = new Dialog(getContext(),
@@ -333,9 +331,8 @@ public class HTMLayout extends LinearLayout {
             if (!TextUtils.isEmpty(source)) {
                 if (urlDrawable == null)
                     urlDrawable = new UrlDrawable();
-                urlDrawable.drawable=getResources().getDrawable(R.drawable.j01);
-                UrldrawableObserver observer = new UrldrawableObserver(view,
-                        urlDrawable);
+                urlDrawable.drawable = getResources().getDrawable(R.drawable.j01);
+                UrldrawableObserver observer = new UrldrawableObserver(view, urlDrawable);
                 AsyncImageLoad.LoadImage(source, AsyncImageLoad.SMILE, null, observer);
                 return urlDrawable;
             }

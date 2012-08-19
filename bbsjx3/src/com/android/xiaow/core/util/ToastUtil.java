@@ -25,7 +25,7 @@ public class ToastUtil {
 			 * toast = new Toast(context); toast.setView(Toast.makeText(context,
 			 * null, 0).getView());
 			 */
-			toast = Toast.makeText(context, null, Toast.LENGTH_LONG);
+			toast = Toast.makeText(context, null, Toast.LENGTH_SHORT);
 		}
 	}
 

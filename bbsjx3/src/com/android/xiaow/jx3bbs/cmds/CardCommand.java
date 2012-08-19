@@ -64,20 +64,45 @@ public class CardCommand extends BaseHttpCommand {
             Log.d("BBB", "登录成功：风雨潇潇梦无痕：");
         }
         Element root = Jsoup.parse(html).body();
-      Elements _formhash= root.getElementsByAttributeValue("name", "formhash");
-      if(_formhash!=null&&_formhash.size()>0){
-          cards.formhash=_formhash.get(0).attributes().get("value");
-      }
-      Elements  subject=root.getElementsByAttributeValue("name", "subject");
-      if(subject!=null&&subject.size()>0){
-          cards.subject=subject.get(0).attributes().get("value");
-      }
-      Elements  usesig= root.getElementsByAttributeValue("name", "usesig");
-      if(usesig!=null&&usesig.size()>0){
-          cards.usesig=usesig.get(0).attributes().get("value");
-      }
-//        subject
-//        usesig
+        Elements _formhash = root.getElementsByAttributeValue("name", "formhash");
+        if (_formhash != null && _formhash.size() > 0) {
+            cards.formhash = _formhash.get(0).attributes().get("value");
+        }
+        Elements subject = root.getElementsByAttributeValue("name", "subject");
+        if (subject != null && subject.size() > 0) {
+            cards.subject = subject.get(0).attributes().get("value");
+        }
+        Elements usesig = root.getElementsByAttributeValue("name", "usesig");
+        if (usesig != null && usesig.size() > 0) {
+            cards.usesig = usesig.get(0).attributes().get("value");
+        }
+        Matcher matcher = Pattern.compile("gid[^<]*").matcher(html);
+        if (matcher.find()) {
+            String sids = matcher.group();
+            Log.d("BBB", sids);
+            String[] sid = sids.split(",");
+            for (String _sid : sid) {
+                if (_sid.trim().indexOf("gid") > -1) {
+                    matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                    if (matcher.find()) {
+                        cards.gid = matcher.group();
+                    }
+                } else if (_sid.trim().indexOf("fid") > -1) {
+                    matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                    if (matcher.find()) {
+                        cards.fid = matcher.group();
+                    }
+                } else if (_sid.trim().indexOf("tid") > -1) {
+                    matcher = Pattern.compile("[0-9]{1,}").matcher(_sid);
+                    if (matcher.find()) {
+                        cards.tid = matcher.group();
+                    }
+                } 
+            }
+            Log.d("BBB", "gid = "+cards.gid+",fid="+cards.fid+",tid="+cards.tid);
+        }
+        // subject
+        // usesig
         Element element = root.getElementById("postlist");
         Elements ele1 = root.getElementsByAttributeValue("class", "pages");
         if (ele1.size() > 0 && ele1.get(0).outerHtml().contains("下一页")) {

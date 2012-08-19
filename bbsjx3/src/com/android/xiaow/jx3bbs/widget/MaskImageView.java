@@ -13,47 +13,45 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class MaskImageView extends ImageView {
-	Rect rect;
-	Path clip;
-	Paint paint;
+    Rect rect;
+    Path clip;
+    Paint paint;
 
-	public MaskImageView(Context context, AttributeSet attrs) {
-		super(context, attrs);
+    public MaskImageView(Context context, AttributeSet attrs) {
+        super(context, attrs);
 
-	}
+    }
 
-	public MaskImageView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+    public MaskImageView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
 
-	}
+    }
 
-	public MaskImageView(Context context) {
-		super(context);
+    public MaskImageView(Context context) {
+        super(context);
 
-	}
+    }
 
-	
+    @SuppressLint("DrawAllocation")
+    @Override
+    protected void onDraw(Canvas canvas) {
 
-	@SuppressLint("DrawAllocation")
-	@Override
-	protected void onDraw(Canvas canvas) {
+        canvas.save();
+        canvas.drawColor(Color.TRANSPARENT);
+        rect = new Rect();
+        getFocusedRect(rect);
+        clip = new Path();
+        clip.addCircle(rect.centerX(), rect.centerY(),
+                Math.min(rect.width() *95/ 200, rect.height()*95 / 200), Direction.CW);
+        canvas.clipPath(clip);
+        super.onDraw(canvas);
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setColor(0xfff3fafb);
+        paint.setStrokeWidth(5);
+        paint.setStyle(Style.STROKE);
+        canvas.drawPath(clip, paint);
 
-		canvas.save();
-		canvas.drawColor(Color.TRANSPARENT);
-		rect = new Rect();
-		getFocusedRect(rect);
-		clip = new Path();
-		clip.addCircle(rect.centerX(), rect.centerY(),
-				Math.min(rect.width() / 2, rect.height() / 2), Direction.CW);
-		canvas.clipPath(clip);
-			super.onDraw(canvas);
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setColor(0xfff3fafb);
-		paint.setStrokeWidth(5);
-		paint.setStyle(Style.STROKE);
-		canvas.drawPath(clip, paint);
-
-	}
+    }
 
 }

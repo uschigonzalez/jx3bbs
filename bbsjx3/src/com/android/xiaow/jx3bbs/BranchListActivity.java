@@ -16,7 +16,9 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -30,8 +32,11 @@ import com.actionbarsherlock.view.MenuItem;
 import com.android.xiaow.core.BaseFragmentActivity;
 import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.cmds.AbstractHttpCommand;
+import com.android.xiaow.core.util.NetUtil;
+import com.android.xiaow.core.util.ToastUtil;
 import com.android.xiaow.jx3bbs.db.MainBrachDB;
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.RefuseInfo;
 import com.android.xiaow.jx3bbs.widget.SlidingGroup;
 
 /**
@@ -56,7 +61,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
     SlidingGroup slidingGroup;
     MenuItem item;
     BranchListFragment fragment;
-
+    NewThreadFragment t_fragment;
     Button set_btn;
     Button login_btn;
     Button login_out_btn;
@@ -85,8 +90,24 @@ public class BranchListActivity extends BaseFragmentActivity implements
         login_out = findViewById(R.id.loginOut);
         loadNaviList();
         loadSetting();
+        getSupportFragmentManager().addOnBackStackChangedListener(onBackStackChangedListener);
     }
 
+    FragmentManager.OnBackStackChangedListener onBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
+
+        @Override
+        public void onBackStackChanged() {
+            if (fragment.isVisible()) {
+                cur_Fragment = fragment;
+                mCallBack = fragment;
+            } else if (detailFragment != null && detailFragment.isVisible()) {
+                mCallBack = detailFragment;
+                cur_Fragment = detailFragment;
+            }
+        }
+    };
+
+    /** 加载设置页面的设置信息 */
     public void loadSetting() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller
                 .getIntance());
@@ -104,6 +125,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
         }
     }
 
+    /** 跳转到设置页面 */
     View.OnClickListener setListener = new View.OnClickListener() {
 
         @Override
@@ -113,10 +135,15 @@ public class BranchListActivity extends BaseFragmentActivity implements
             overridePendingTransition(R.anim.slide_left, R.anim.zoom_out);
         }
     };
+    /** 设置页面登录按钮的监听 */
     View.OnClickListener loginListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
+            if (!NetUtil.checkNet()) {
+                ToastUtil.show("没有检查到网络连接");
+                return;
+            }
             slidingGroup.snapToDefault();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.slide_left, R.anim.zoom_out, R.anim.slide_left,
@@ -124,10 +151,12 @@ public class BranchListActivity extends BaseFragmentActivity implements
             ft.hide(cur_Fragment);
             LoginFragment loginFragment = new LoginFragment();
             ft.add(R.id.item_list, loginFragment);
+            ft.addToBackStack("login");
             ft.commit();
             mCallBack = loginFragment;
         }
     };
+    /** 设置页面注销按钮的监听 */
     View.OnClickListener loginOutListener = new View.OnClickListener() {
 
         @Override
@@ -154,6 +183,8 @@ public class BranchListActivity extends BaseFragmentActivity implements
         return true;
     }
 
+    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller.getIntance());
+
     /** 监听ActionBar上的Menu菜单按钮 */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,6 +195,37 @@ public class BranchListActivity extends BaseFragmentActivity implements
             if (mCallBack != null) {
                 mCallBack.onReset();
             }
+            break;
+        case R.id.new_thread:
+            if (mCallBack == null || mCallBack.getInfo() == null)
+                return true;
+            if (System.currentTimeMillis() - ((JX3Application) getApplication()).lastRefuse < 30 * 1000) {
+                ToastUtil.show("对不起，您两次发表间隔少于 30 秒，请不要灌水");
+                return true;
+            }
+            if (TextUtils.isEmpty(sp.getString("nickname", ""))) {
+                ToastUtil.show("对不起，请先登录");
+                return true;
+            }
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.setCustomAnimations(R.anim.slide_left, R.anim.zoom_out, R.anim.slide_left,
+                    R.anim.zoom_out);
+            t_fragment = new NewThreadFragment();
+            Bundle args = new Bundle();
+            RefuseInfo info = mCallBack.getInfo();
+            info.parent = cur_Branch.name;
+            args.putSerializable("Info", info);
+            t_fragment.setArguments(args);
+            if (fragment.isVisible())
+                ft.hide(fragment);
+            else if (cur_Fragment != null && cur_Fragment.isVisible()) {
+                ft.hide(cur_Fragment);
+            }
+            ft.add(R.id.item_list, t_fragment);
+            ft.addToBackStack("new_thread");
+            ft.commit();
+            cur_Fragment = t_fragment;
+            mCallBack = t_fragment;
             break;
         case android.R.id.home:
             slidingGroup.snapToNext();
@@ -199,16 +261,8 @@ public class BranchListActivity extends BaseFragmentActivity implements
 
     /** 响应ActionBar上的下拉列表选择，切换版块 */
     public void navigationSelected(MainArea mArea) {
-        if (fragment != null) {
-            mCallBack = fragment;
-            if (!slidingGroup.isDefault()) {
-                slidingGroup.snapToDefault();
-            }
-            if (fragment.isHidden()) {
-                getSupportFragmentManager().popBackStack();
-            }
+        if (fragment != null && fragment.isVisible()) {
             fragment.loadBranch(mArea);
-
         } else {
             fragment = new BranchListFragment();
             mCallBack = fragment;
@@ -224,13 +278,15 @@ public class BranchListActivity extends BaseFragmentActivity implements
         cur_Fragment = fragment;
     }
 
+    BranchDetailFragment detailFragment;
+
     /** 响应Fragment中的事件，以便于加载版块 */
     @Override
     public void itemSelected(String name, String url) {
         Bundle bundle = new Bundle();
         bundle.putString(BranchDetailFragment.NAME_TITEL_ITEM, name);
         bundle.putString(BranchDetailFragment.URL_ITEM_ID, url);
-        BranchDetailFragment detailFragment = new BranchDetailFragment();
+        detailFragment = new BranchDetailFragment();
         mCallBack = detailFragment;
         detailFragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -240,7 +296,6 @@ public class BranchListActivity extends BaseFragmentActivity implements
         ft.hide(fragment);
         ft.addToBackStack(null);
         ft.commit();
-        cur_Fragment = detailFragment;
     }
 
     /** ActionBar上 下拉菜单的Adapter */
@@ -283,18 +338,21 @@ public class BranchListActivity extends BaseFragmentActivity implements
     @Override
     public void loginFinish() {
         if (mCallBack instanceof LoginFragment) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.slide_left, R.anim.zoom_out, R.anim.slide_left,
-                    R.anim.zoom_out);
-            ft.remove((Fragment) mCallBack);
-            ft.show(cur_Fragment);
-            ft.commit();
+            getSupportFragmentManager().popBackStack();
             mCallBack = (BranchListActivityCallBack) cur_Fragment;
         }
         loadSetting();
         if (mCallBack != null) {
             mCallBack.onReset();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (cur_Fragment instanceof BranchListFragment) {
+            finish();
+        } else
+            super.onBackPressed();
     }
 
 }
