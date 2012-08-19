@@ -26,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -122,6 +124,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         if (!TextUtils.isEmpty(title)) {
             title_TextView.setText(title);
         }
+        refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
         onReset();
         application = (JX3Application) getActivity().getApplication();
     }
@@ -132,6 +135,10 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         cards.cards = new ArrayList<Card>();
         mAdapter = new CardAdapter(cards);
         setListAdapter(mAdapter);
+        if (listView == null) {
+            ToastUtil.show("请尝试手动下拉刷新！！");
+            return;
+        }
         listView.hideFoot();
         listView.onFresh();
         mInfo = null;
@@ -206,6 +213,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             }
             if (System.currentTimeMillis() - application.lastRefuse < 1000 * 30) {
                 ToastUtil.show("对不起，您两次发表间隔少于 30 秒，请不要灌水");
+                return;
             }
             ReplayRequest replayRequest = new ReplayRequest();
             replayRequest.url = "http://jx3.bbs.xoyo.com/post.php?action=reply&fid="
@@ -217,15 +225,23 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             replayRequest.formhash = mCards.formhash;
             replayRequest.subject = mCards.subject;
             replayRequest.usesig = mCards.usesig;
-            replayRequest.Content = content + "\r\n\r\n\r\n" + getString(R.string.refuse_buff, Build.MODEL);
+            replayRequest.Content = content + "\r\n\r\n\r\n"
+                    + getString(R.string.refuse_buff, Build.MODEL);
             Controller.getIntance().registerCommand(Initializer.REPLAY_CMD_ID, replayRequest,
                     refuseListener);
             refuse.setEnabled(false);
             et.setEnabled(false);
-            getView().findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
+            out = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down_out);
+            in = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up_in);
+            out.setFillAfter(true);
+            in.setFillAfter(true);
+            refuseView.findViewById(R.id.layout1).setVisibility(View.VISIBLE);
+            refuseView.findViewById(R.id.layout1).startAnimation(in);
+            refuseView.findViewById(R.id.layout2).startAnimation(out);
         }
     };
-
+    Animation out;
+    Animation in;
     IResponseListener refuseListener = new IResponseListener() {
 
         @Override
@@ -235,7 +251,9 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             refuse.setEnabled(true);
             et.setEnabled(true);
             et.setText("");
-            getView().findViewById(R.id.progressBar1).setVisibility(View.GONE);
+            refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
+            refuseView.findViewById(R.id.layout1).startAnimation(out);
+            refuseView.findViewById(R.id.layout2).startAnimation(in);
         }
 
         @Override
@@ -243,7 +261,9 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             ToastUtil.show(response.errorMsg);
             refuse.setEnabled(true);
             et.setEnabled(true);
-            getView().findViewById(R.id.progressBar1).setVisibility(View.GONE);
+            refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
+            refuseView.findViewById(R.id.layout1).startAnimation(out);
+            refuseView.findViewById(R.id.layout2).startAnimation(in);
         }
     };
 

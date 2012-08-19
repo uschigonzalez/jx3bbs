@@ -146,6 +146,10 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     public void onReset() {
         // TODO:reset
         mInfo=null;
+        if (listView == null) {
+            ToastUtil.show("请尝试手动下拉刷新！！");
+            return;
+        }
         listView.onFresh();
         listView.hideFoot();
         mAdapter = new BranchListAdapter(new ArrayList<Bernda>(), getActivity());

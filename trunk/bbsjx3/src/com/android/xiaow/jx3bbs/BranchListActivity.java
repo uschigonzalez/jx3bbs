@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -261,7 +262,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
 
     /** 响应ActionBar上的下拉列表选择，切换版块 */
     public void navigationSelected(MainArea mArea) {
-        if (fragment != null && fragment.isVisible()) {
+        if (fragment != null && fragment.isVisible() && mCallBack instanceof BranchListFragment) {
             fragment.loadBranch(mArea);
         } else {
             fragment = new BranchListFragment();
@@ -272,6 +273,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.slide_left, R.anim.zoom_out, R.anim.slide_left,
                     R.anim.zoom_out);
+            ((LinearLayout) findViewById(R.id.item_list)).removeAllViews();
             ft.replace(R.id.item_list, fragment);
             ft.commit();
         }
@@ -340,6 +342,9 @@ public class BranchListActivity extends BaseFragmentActivity implements
         if (mCallBack instanceof LoginFragment) {
             getSupportFragmentManager().popBackStack();
             mCallBack = (BranchListActivityCallBack) cur_Fragment;
+        }
+        if (mCallBack instanceof NewThreadFragment) {
+            navigationSelected(cur_Branch);
         }
         loadSetting();
         if (mCallBack != null) {
