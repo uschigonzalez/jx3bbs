@@ -9,6 +9,7 @@
 package com.android.xiaow.jx3bbs;
 
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.RefuseInfo;
 
 /**
  * @ClassName: BranchListActivityCallBack
@@ -21,4 +22,6 @@ public interface BranchListActivityCallBack {
     public void onReset();
 
     public void loadBranch(MainArea branch);
+    
+    public RefuseInfo getInfo();
 }

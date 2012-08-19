@@ -28,6 +28,8 @@ public class SqliteConn extends SQLiteOpenHelper {
                 + "name text, url text UNIQUE," + " isSubBroad integer DEFAULT 0, "
                 + "today integer, newthread text, "
                 + "refuse text, url_last text, last_name text, parent text)");
+        db.execSQL("CREATE TABLE type ( " + " parent TEXT," + "name TEXT," + "value TEXT,"
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT );");
     }
 
     @Override

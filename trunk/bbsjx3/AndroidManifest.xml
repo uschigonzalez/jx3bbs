@@ -44,6 +44,12 @@
             android:name="BranchDetailActivity"
             android:theme="@style/Theme.AndroidDevelopers" >
         </activity>
+
+        <service android:name="com.android.xiaow.core.service.LogService" >
+            <intent-filter>
+                <action android:name="com.android.xiaow.core.service.logservice" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

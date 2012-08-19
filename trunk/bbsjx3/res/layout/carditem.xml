@@ -7,11 +7,11 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginTop="40dp"
         android:background="@drawable/card_item_backgroud"
         android:orientation="vertical"
         android:paddingLeft="10.0dip"
         android:paddingRight="10.0dip"
-        android:layout_marginTop="40dp"
         android:paddingTop="40.0dip" >
 
         <com.android.xiaow.jx3bbs.widget.HTMLayout
@@ -40,16 +40,6 @@
                 android:text="发表于：1970-01-01"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#b0b0b0" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:gravity="right"
-                android:text="1#"
-                android:textColor="@color/yellow"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
     </LinearLayout>
 
@@ -64,9 +54,9 @@
         <com.android.xiaow.jx3bbs.widget.MaskImageView
             android:id="@+id/imageView1"
             android:layout_width="78.0dip"
-            android:layerType="software"
             android:layout_height="78.0dip"
             android:layout_marginTop="5.0dip"
+            android:layerType="software"
             android:src="@drawable/noavatar" />
 
         <TextView
@@ -77,8 +67,19 @@
             android:layout_marginLeft="10.0dip"
             android:layout_marginTop="15.0dip"
             android:gravity="center"
-            android:text="1111111111"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="5.0dip"
+            android:layout_marginTop="10.0dip"
+            android:gravity="center_vertical|right"
+            android:text="1#"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/yellow" />
 
         <TextView
             android:id="@+id/textView2"

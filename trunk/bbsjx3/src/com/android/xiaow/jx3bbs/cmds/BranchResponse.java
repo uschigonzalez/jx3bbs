@@ -30,4 +30,9 @@ public class BranchResponse extends Response {
      */
     public int max_page;
     public List<Bernda> berndas;
+    public String formhash;
+    public String   listextra;
+    public String gid;
+    public String fid;
+    public String tid;
 }

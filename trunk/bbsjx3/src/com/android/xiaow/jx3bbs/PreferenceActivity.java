@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.android.xiaow.jx3bbs.db.MainBrachDB;
 
 /**
  * @ClassName: PreferenceActivity

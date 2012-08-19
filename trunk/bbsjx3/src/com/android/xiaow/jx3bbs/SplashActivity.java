@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.android.xiaow.core.BaseFragmentActivity;
 import com.android.xiaow.core.Initializer;
+import com.android.xiaow.core.service.LogServiceUtil;
 import com.android.xiaow.core.threads.Manager;
 
 public class SplashActivity extends BaseFragmentActivity {
@@ -31,6 +32,7 @@ public class SplashActivity extends BaseFragmentActivity {
                 goNext();
             }
         }, 2000);
+        LogServiceUtil.StartService(this);
     }
 
     public void goNext() {

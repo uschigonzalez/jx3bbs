@@ -14,8 +14,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +27,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,11 +37,13 @@ import com.android.xiaow.core.Initializer;
 import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Request;
 import com.android.xiaow.core.common.Response;
+import com.android.xiaow.core.util.ToastUtil;
 import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
 import com.android.xiaow.jx3bbs.cmds.ReplayRequest;
 import com.android.xiaow.jx3bbs.model.Card;
 import com.android.xiaow.jx3bbs.model.Cards;
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.RefuseInfo;
 import com.android.xiaow.jx3bbs.widget.HTMLayout;
 import com.android.xiaow.jx3bbs.widget.PushListView;
 import com.android.xiaow.jx3bbs.widget.PushListView.OnRefreshListener;
@@ -60,6 +67,14 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     BranchListFragment.CallBack mCallBack;
     TextView title_TextView;
     CardAdapter mAdapter;
+    View refuseView;
+    Button refuse;
+    Button mFastRefuse;
+    Cards mCards;
+    EditText et;
+    JX3Application application = null;
+    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller.getIntance());
+    RefuseInfo mInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +105,17 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView = (PushListView) getListView();
+        refuse = (Button) getView().findViewById(R.id.button1);
+        mFastRefuse = (Button) getView().findViewById(R.id.button2);
+        refuseView = getView().findViewById(R.id.refuse);
+        refuseView.setVisibility(View.GONE);
+        et = (EditText) getView().findViewById(R.id.editText1);
+        /**
+         * 暂定方案
+         */
+        mFastRefuse.setVisibility(View.GONE);
+        refuse.setVisibility(View.VISIBLE);
+        refuse.setOnClickListener(mRefuseListener);
         listView.setonRefreshListener(this);
         listView.hideFoot();
         title_TextView = (TextView) getView().findViewById(R.id.textView1);
@@ -97,6 +123,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             title_TextView.setText(title);
         }
         onReset();
+        application = (JX3Application) getActivity().getApplication();
     }
 
     @Override
@@ -107,6 +134,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         setListAdapter(mAdapter);
         listView.hideFoot();
         listView.onFresh();
+        mInfo = null;
     }
 
     @Override
@@ -131,6 +159,11 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     }
 
     @Override
+    public RefuseInfo getInfo() {
+        return mInfo;
+    }
+
+    @Override
     public void onSuccess(Response response) {
         Cards cards = (Cards) response.result;
         if (listView.isrefresh()) {
@@ -149,23 +182,75 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         onLoadComplete();
         Log.d("MSG", "formhash" + cards.formhash + ",subject" + cards.subject + ",usesig"
                 + cards.usesig);
-
-        String str = url.substring(url.indexOf("tid="));
-        ReplayRequest replayRequest = new ReplayRequest();
-        replayRequest.url = "http://jx3.bbs.xoyo.com/post.php?action=reply&fid=7101&"
-                + str
-                + "&extra=page%3D1&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined";
-        Log.d("MSG", "url=" + replayRequest.url);
-        replayRequest.formhash = cards.formhash;
-        replayRequest.subject = cards.subject;
-        replayRequest.usesig = cards.usesig;
-        Controller.getIntance().registerCommand(Initializer.REPLAY_CMD_ID, replayRequest);
-
+        mCards = cards;
+        if (!TextUtils.isEmpty(sp.getString("nickname", ""))) {
+            refuseView.setVisibility(View.VISIBLE);
+        }
+        mInfo = new RefuseInfo();
+        mInfo.formhash = mCards.formhash;
+        mInfo.subject = mCards.subject;
+        mInfo.usesig = mCards.usesig;
+        mInfo.fid = mCards.fid;
+        mInfo.tid = mCards.tid;
+        mInfo.gid = mCards.gid;
     }
+
+    View.OnClickListener mRefuseListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            String content = et.getText().toString();
+            if (TextUtils.isEmpty(content) || content.getBytes().length < 10) {
+                ToastUtil.show("回复内容不能少于10个字节！");
+                return;
+            }
+            if (System.currentTimeMillis() - application.lastRefuse < 1000 * 30) {
+                ToastUtil.show("对不起，您两次发表间隔少于 30 秒，请不要灌水");
+            }
+            ReplayRequest replayRequest = new ReplayRequest();
+            replayRequest.url = "http://jx3.bbs.xoyo.com/post.php?action=reply&fid="
+                    + mCards.fid
+                    + "&tid="
+                    + mCards.tid
+                    + "&extra=page%3D1&replysubmit=yes&infloat=yes&handlekey=fastpost&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined&inajax=1&local=undefined";
+            Log.d("MSG", "url=" + replayRequest.url);
+            replayRequest.formhash = mCards.formhash;
+            replayRequest.subject = mCards.subject;
+            replayRequest.usesig = mCards.usesig;
+            replayRequest.Content = content + "\r\n\r\n\r\n" + getString(R.string.refuse_buff, Build.MODEL);
+            Controller.getIntance().registerCommand(Initializer.REPLAY_CMD_ID, replayRequest,
+                    refuseListener);
+            refuse.setEnabled(false);
+            et.setEnabled(false);
+            getView().findViewById(R.id.progressBar1).setVisibility(View.VISIBLE);
+        }
+    };
+
+    IResponseListener refuseListener = new IResponseListener() {
+
+        @Override
+        public void onSuccess(Response response) {
+            ToastUtil.show("回复成功");
+            application.lastRefuse = System.currentTimeMillis();
+            refuse.setEnabled(true);
+            et.setEnabled(true);
+            et.setText("");
+            getView().findViewById(R.id.progressBar1).setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onError(Response response) {
+            ToastUtil.show(response.errorMsg);
+            refuse.setEnabled(true);
+            et.setEnabled(true);
+            getView().findViewById(R.id.progressBar1).setVisibility(View.GONE);
+        }
+    };
 
     @Override
     public void onError(Response response) {
         onLoadComplete();
+        ToastUtil.show(response.errorMsg);
         page = Math.max(1, --page);
     }
 
@@ -319,4 +404,5 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         }
 
     }
+
 }

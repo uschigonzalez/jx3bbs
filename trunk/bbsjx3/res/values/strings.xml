@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <string name="app_name">剑叁论</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_splash">剑叁论</string>
+
     <string-array name="setting_list_item_name">
         <item>仅在wifi下，下载图片和头像</item>
         <item>仅下载图片</item>
@@ -15,6 +17,9 @@
         <item>2</item>
         <item>3</item>
     </string-array>
+
     <string name="action_label_refresh">刷新</string>
     <string name="setting">设置</string>
+    <string name="refuse_buff">[color=Gray]来自%1$s[/color]</string>
+	<string name="new_thread">发帖</string>
 </resources>

@@ -22,6 +22,7 @@ import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.Initializer;
 import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Response;
+import com.android.xiaow.core.service.LogServiceUtil;
 import com.android.xiaow.core.util.ColorUtil;
 import com.android.xiaow.jx3bbs.model.MainArea;
 import com.android.xiaow.jx3bbs.widget.CellLayout;
@@ -116,4 +117,11 @@ public class MainListActivity extends BaseFragmentActivity implements IResponseL
             overridePendingTransition(R.anim.slide_left, R.anim.zoom_out);
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LogServiceUtil.stopService(this);
+    }
+
 }

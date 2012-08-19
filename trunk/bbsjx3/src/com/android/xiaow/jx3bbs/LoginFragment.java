@@ -10,6 +10,7 @@ package com.android.xiaow.jx3bbs;
 
 import java.net.URLDecoder;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -31,6 +33,7 @@ import com.android.xiaow.core.cmds.AbstractHttpCommand;
 import com.android.xiaow.core.util.ToastUtil;
 import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.RefuseInfo;
 
 /**
  * @ClassName: LoginFragment
@@ -39,6 +42,7 @@ import com.android.xiaow.jx3bbs.model.MainArea;
  * @date 2012-8-12 下午10:52:43
  * 
  */
+@SuppressLint("SetJavaScriptEnabled")
 public class LoginFragment extends Fragment implements BranchListActivityCallBack {
 
     CallBack mCallBack;
@@ -46,9 +50,11 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
     String cookie;
     LoginFinishCallBack loginFinishCallBack;
 
-    private void finish() {
-        if (loginFinishCallBack != null)
+    private synchronized void finish() {
+        if (loginFinishCallBack != null) {
             loginFinishCallBack.loginFinish();
+            loginFinishCallBack = null;
+        }
     }
 
     @Override
@@ -72,6 +78,7 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        CookieSyncManager.createInstance(getActivity());
         CookieManager.getInstance().removeAllCookie();
         mWebView.setWebViewClient(webViewClient);
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -80,12 +87,24 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         mWebView.loadUrl("https://my.xoyo.com/login/login/aHR0cCUzQSUyRiUyRmp4My5iYnMueG95by5jb20lMkZpbmRleC5waHA=__bbs");
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        CookieSyncManager.createInstance(getActivity()).stopSync();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        CookieSyncManager.createInstance(getActivity()).startSync();
+    }
+
     /**
      * @Title: isLogin
      * @Description: TODO(这里用一句话描述这个方法的作用)
      * @return
      */
-    public static  boolean isLogin() {
+    public static boolean isLogin() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller
                 .getIntance());
         return !(TextUtils.isEmpty(sp.getString("nickname", null)) || TextUtils.isEmpty(sp
@@ -105,31 +124,25 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
             // TODO Auto-generated method stub
             super.onPageFinished(view, url);
             cookie = CookieManager.getInstance().getCookie(".xoyo.com");
-            if (url.contains("jx3.bbs.xoyo.com")) {
-                Log.d("MSG", "登陆成功");
-                finish();
-            }
+            buildCookie();
         }
 
         @Override
         public void onLoadResource(WebView view, String url) {
             super.onLoadResource(view, url);
             Log.d("BBB", "onLoadResource," + url);
-            if (url.contains("jx3.bbs.xoyo.com")) {
-                cookie = CookieManager.getInstance().getCookie(".xoyo.com");
-                buildCookie();
-            }
+            cookie = CookieManager.getInstance().getCookie(".xoyo.com");
+            buildCookie();
+
         }
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            if (url.contains("jx3.bbs.xoyo.com")) {
-                Log.d("MSG", "登陆成功");
-                cookie = CookieManager.getInstance().getCookie(".xoyo.com");
-                buildCookie();
-                finish();
-            }
+            Log.d("MSG", "登陆成功");
+            cookie = CookieManager.getInstance().getCookie(".xoyo.com");
+            buildCookie();
+
         }
 
     };
@@ -147,17 +160,27 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
             nickname = nickname.substring(nickname.indexOf("=") + 1);
             nickname = URLDecoder.decode(nickname);
         }
+
         Editor editor = PreferenceManager.getDefaultSharedPreferences(Controller.getIntance())
                 .edit();
         editor.putString("nickname", nickname);
         editor.putString("cookies", cookie);
         editor.commit();
-        ToastUtil.show("欢迎登陆：" + nickname);
+        if (!TextUtils.isEmpty(nickname)) {
+            finish();
+            ToastUtil.show("欢迎登陆：" + nickname);
+        }
     }
 
     @Override
     public void loadBranch(MainArea branch) {
 
+    }
+
+  
+    @Override
+    public RefuseInfo getInfo() {
+        return null;
     }
 
 }

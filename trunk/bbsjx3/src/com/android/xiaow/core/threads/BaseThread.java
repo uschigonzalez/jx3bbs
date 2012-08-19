@@ -32,7 +32,11 @@ public class BaseThread extends Thread {
 			ICommand cmd = queue.getNextICommand();
 			if (cmd != null) {
 				if (cmd instanceof NoCommand) { return; }
-				cmd.execute();
+				try {
+                    cmd.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 			}
 		}
 	}

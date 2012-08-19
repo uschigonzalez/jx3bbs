@@ -8,16 +8,19 @@ import java.util.List;
 
 /**
  * @author xiaowei
- *
+ * 
  */
 public class Cards {
-	public boolean hasNextPage;
-	public List<Card> cards;
-	public String title;
-	public String authorId;
-	public int max_page;
-	public int cur_page;
-	public String formhash;
-	public String subject;
-	public String usesig;
+    public boolean hasNextPage;
+    public List<Card> cards;
+    public String title;
+    public String authorId;
+    public int max_page;
+    public int cur_page;
+    public String formhash;
+    public String subject;
+    public String usesig;
+    public String gid;
+    public String fid;
+    public String tid;
 }
