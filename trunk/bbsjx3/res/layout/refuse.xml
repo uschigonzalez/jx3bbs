@@ -35,9 +35,10 @@
             android:id="@+id/editText1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/button2"
+            android:layout_alignBottom="@+id/button1"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_alignTop="@+id/button1"
             android:layout_toLeftOf="@+id/button1"
             android:layout_weight="1" >
         </EditText>
@@ -50,7 +51,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/btn_32"
+            android:background="@drawable/btn_01"
             android:text="回复"
             android:textColor="@android:color/black" />
 
@@ -63,7 +64,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/btn_32"
+            android:background="@drawable/btn_01"
             android:text="快速回复"
             android:textColor="@android:color/black"
             android:visibility="gone" />

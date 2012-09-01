@@ -85,6 +85,8 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
         super.onSaveInstanceState(outState);
     }
 
+  
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -145,7 +147,7 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     @Override
     public void onReset() {
         // TODO:reset
-        mInfo=null;
+        mInfo = null;
         if (listView == null) {
             ToastUtil.show("请尝试手动下拉刷新！！");
             return;
@@ -189,11 +191,11 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
         listView.onRefreshComplete();
         if (mCallBack != null)
             mCallBack.resetEnd();
-        mInfo=new RefuseInfo();
-        mInfo.formhash=response.formhash;
-        mInfo.fid=response.fid;
-        mInfo.gid=response.gid;
-        mInfo.tid=response.tid;
+        mInfo = new RefuseInfo();
+        mInfo.formhash = response.formhash;
+        mInfo.fid = response.fid;
+        mInfo.gid = response.gid;
+        mInfo.tid = response.tid;
         // ReplayRequest request=new ReplayRequest();
         // request.formhash=response.formhash;
         // Controller.getIntance().registerCommand(Initializer.THREAD_CMD_ID,request);

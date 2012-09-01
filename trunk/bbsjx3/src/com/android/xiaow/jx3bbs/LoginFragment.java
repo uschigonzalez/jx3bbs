@@ -60,6 +60,7 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        isShow = false;
         if (!(activity instanceof CallBack)) {
             throw new IllegalStateException("Activity must implement fragment's callbacks.");
         }
@@ -84,6 +85,8 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAppCacheEnabled(true);
         mWebView.getSettings().setBuiltInZoomControls(true);
+        mWebView.getSettings().setSaveFormData(false);
+        mWebView.getSettings().setSavePassword(false);
         mWebView.loadUrl("https://my.xoyo.com/login/login/aHR0cCUzQSUyRiUyRmp4My5iYnMueG95by5jb20lMkZpbmRleC5waHA=__bbs");
     }
 
@@ -147,6 +150,8 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
 
     };
 
+    boolean isShow = false;
+
     @SuppressWarnings("deprecation")
     public void buildCookie() {
         cookie += ";" + CookieManager.getInstance().getCookie("jx3.bbs.xoyo.com");
@@ -166,8 +171,9 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         editor.putString("nickname", nickname);
         editor.putString("cookies", cookie);
         editor.commit();
-        if (!TextUtils.isEmpty(nickname)) {
+        if (!TextUtils.isEmpty(nickname) && !isShow) {
             finish();
+            isShow = true;
             ToastUtil.show("欢迎登陆：" + nickname);
         }
     }
@@ -177,7 +183,6 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
 
     }
 
-  
     @Override
     public RefuseInfo getInfo() {
         return null;

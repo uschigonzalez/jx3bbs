@@ -3,13 +3,13 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_back0" >
+    android:background="@color/color1" >
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/item_shadow"
-        android:padding="-10dp" />
+        android:background="@drawable/cell_light"
+        android:padding="-4dp" />
 
     <TextView
         android:id="@+id/textView1"

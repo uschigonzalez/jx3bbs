@@ -22,4 +22,6 @@
     <string name="setting">设置</string>
     <string name="refuse_buff">[color=Gray]来自%1$s[/color]</string>
 	<string name="new_thread">发帖</string>
+	<string name="title_thread_hint">标题</string>
+	<string name="thread_content_hint">输入内容</string>
 </resources>

@@ -24,6 +24,16 @@
     <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="gold">#b89766</color>
-    <color name="yellow">#FFA500</color>
-
+    <color name="yellow">#ffFFA500</color>
+    <color name="color0">#ffAA66CC</color>
+    <color name="color1">#ff99CC00</color>
+    <color name="color2">#ffFFBB33</color>
+    <color name="color3">#ffFF4444</color>
+    <color name="color4">#ff0099CC</color>
+    <color name="color5">#ff9933CC</color>
+    <color name="color6">#ff669900</color>
+    <color name="color7">#ffFF8800</color>
+    <color name="color8">#ffCC0000</color>
+    <color name="color9">#ff33B5E5</color>
+    
 </resources>

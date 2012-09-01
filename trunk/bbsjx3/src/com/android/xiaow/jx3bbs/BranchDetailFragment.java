@@ -64,7 +64,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     String url;
     String title;
     PushListView listView;
-    int page = 1;
+    int page = 0;
     int page_max;
     BranchListFragment.CallBack mCallBack;
     TextView title_TextView;
@@ -131,16 +131,22 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
 
     @Override
     public void onReset() {
-        Cards cards = new Cards();
-        cards.cards = new ArrayList<Card>();
-        mAdapter = new CardAdapter(cards);
-        setListAdapter(mAdapter);
+        if (mAdapter == null) {
+            Cards cards = new Cards();
+            cards.cards = new ArrayList<Card>();
+            mAdapter = new CardAdapter(cards);
+            setListAdapter(mAdapter);
+        }
         if (listView == null) {
             ToastUtil.show("请尝试手动下拉刷新！！");
             return;
         }
-        listView.hideFoot();
-        listView.onFresh();
+        if (page == 0 || page_max == 1) {
+            listView.hideFoot();
+            listView.onFresh(false);
+        } else {
+            listView.onFreshMore();
+        }
         mInfo = null;
     }
 
@@ -152,7 +158,13 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     public void onRefresh() {
         listView.hideFoot();
         Request request = new Request();
-        page = 1;
+        if (page == 0)
+            page = 1;
+        else {
+            page++;
+            if (page > page_max)
+                page = page_max;
+        }
         request.url = url + "&" + BranchListFragment.PAGE_FIELD + "=" + page;
         Controller.getIntance().registerCommand(Initializer.CARD_CMD_ID, request, this);
     }
@@ -161,6 +173,8 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     public void addMore() {
         Request request = new Request();
         page++;
+        if (page > page_max)
+            page = page_max;
         request.url = url + "&" + BranchListFragment.PAGE_FIELD + "=" + page;
         Controller.getIntance().registerCommand(Initializer.CARD_CMD_ID, request, this);
     }
@@ -170,17 +184,41 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         return mInfo;
     }
 
+    int pre_page = 0;
+
     @Override
     public void onSuccess(Response response) {
         Cards cards = (Cards) response.result;
-        if (listView.isrefresh()) {
+        if (page > 1 && page == page_max) {
+            int pre_count = mAdapter.getCount();
+            List<Card> datas = new ArrayList<Card>();
+            int count = pre_page * (page - 1);
+            for (int i = 0; i < count; i++) {
+                datas.add(mAdapter.getItem(i));
+            }
+            datas.addAll(cards.cards);
+            mAdapter.changeData(datas);
+            listView.setSelection(pre_count - 1);
+        } else if (listView.isrefresh()) {
+            pre_page = cards.cards.size();
             mAdapter = new CardAdapter(cards);
             setListAdapter(mAdapter);
+        } else if (cards.cur_page == 0&&cards.max_page==0&&page_max==0) {
+            pre_page = cards.cards.size();
+            int pre = mAdapter.getCount();
+            mAdapter = new CardAdapter(cards);
+            setListAdapter(mAdapter);
+            listView.setSelection(pre - 1);
         } else {
+            pre_page = cards.cards.size();
             mAdapter.addData(cards);
         }
-        page = cards.cur_page;
-        page_max = cards.max_page;
+        if (cards.hasNextPage) {
+            page = cards.cur_page;
+            page_max = cards.max_page;
+        } else {
+            page = page_max;
+        }
         if (page < page_max) {
             listView.showFoot();
         } else {
@@ -254,6 +292,8 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
             refuseView.findViewById(R.id.layout1).startAnimation(out);
             refuseView.findViewById(R.id.layout2).startAnimation(in);
+            listView.showFoot();
+            listView.onFreshMore();
         }
 
         @Override

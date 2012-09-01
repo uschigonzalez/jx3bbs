@@ -31,7 +31,7 @@ public class SplashActivity extends BaseFragmentActivity {
             public void run() {
                 goNext();
             }
-        }, 2000);
+        }, 3000);
         LogServiceUtil.StartService(this);
     }
 
