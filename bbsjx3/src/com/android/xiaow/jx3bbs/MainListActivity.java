@@ -45,12 +45,17 @@ public class MainListActivity extends BaseFragmentActivity implements IResponseL
         super.onCreate(arg0);
         setContentView(R.layout.workspace);
         textColor = ColorUtil.generateTransitionalColor(0x00ff0000, 0x00000000, 12);
-        color = new int[] { R.drawable.item_back0, R.drawable.item_back1, R.drawable.item_back2,
-                R.drawable.item_back3, R.drawable.item_back4, R.drawable.item_back5,
-                R.drawable.item_back6, R.drawable.item_back7, R.drawable.item_back8,
-                R.drawable.item_back9, R.drawable.item_back10, R.drawable.item_back11 };
+        color = new int[] { R.color.color0, R.color.color1, R.color.color2, R.color.color3,
+                R.color.color4, R.color.color5, R.color.color6, R.color.color7, R.color.color8,
+                R.color.color9 };
         work = (Workspace) findViewById(R.id.workspace);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Controller.getIntance().registerCommand(Initializer.INIT_MAIN_BRACH_CMD_ID, null, this);
+
     }
 
     @SuppressWarnings("all")

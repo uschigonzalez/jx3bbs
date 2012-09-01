@@ -6,7 +6,7 @@
     app:defaultScreen="2"
     android:id="@+id/workspace"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper" >
+    android:background="@drawable/back_03" >
 	<include android:id="@+id/cell1" layout="@layout/screen"/>
 	<include android:id="@+id/cell2" layout="@layout/screen"/>
 	<include android:id="@+id/cell3" layout="@layout/screen"/>

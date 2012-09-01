@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper"
+    android:background="@drawable/back_03"
     android:orientation="vertical" >
-
+
     <EditText
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:ems="10" >
-
+        android:ems="10"
+        android:hint="@string/title_thread_hint" >
         <requestFocus />
     </EditText>
 
@@ -66,7 +66,7 @@
         android:background="@drawable/long_btn"
         android:text="发帖"
         android:textColor="@android:color/black" />
-
+
     <EditText
         android:id="@+id/editText2"
         android:layout_width="fill_parent"
@@ -75,7 +75,9 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView1"
         android:ems="10"
+        android:gravity="top|left"
         android:inputType="textMultiLine"
+        android:hint="@string/thread_content_hint"
         android:textColor="@android:color/black" />
 
 </RelativeLayout>

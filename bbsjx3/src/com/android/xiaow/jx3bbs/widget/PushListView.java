@@ -114,13 +114,17 @@ public class PushListView extends ListView implements OnScrollListener {
 
             @Override
             public void onClick(View arg0) {
-                if (refreshListener != null) {
-                    refreshListener.addMore();
-                    arg0.setVisibility(View.GONE);
-                    footView.findViewById(R.id.lin1).setVisibility(View.VISIBLE);
-                }
+                onFreshMore();
             }
         });
+    }
+
+    public void onFreshMore() {
+        if (refreshListener != null) {
+            refreshListener.addMore();
+            footView.findViewById(R.id.textView2).setVisibility(View.GONE);
+            footView.findViewById(R.id.lin1).setVisibility(View.VISIBLE);
+        }
     }
 
     public void onScroll(AbsListView arg0, int firstVisiableItem, int visibleItemCount,
@@ -236,8 +240,13 @@ public class PushListView extends ListView implements OnScrollListener {
     }
 
     public void onFresh() {
+        onFresh(true);
+    }
+
+    public void onFresh(boolean flag) {
         state = REFRESHING;
-        setSelection(0);
+        if (flag)
+            setSelection(0);
         headView.setPadding(0, headContentHeight, 0, 0);
         changeHeaderViewByState();
         onRefresh();

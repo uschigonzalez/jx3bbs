@@ -12,6 +12,7 @@ import android.content.Intent;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.xiaow.jx3bbs.R;
+import com.baidu.mobstat.StatService;
 
 /**
  * @ClassName: BaseFragmentActivity
@@ -28,8 +29,15 @@ public class BaseFragmentActivity extends SherlockFragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        StatService.onResume(this);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        StatService.onPause(this);
         overridePendingTransition(R.anim.slide_left, R.anim.zoom_out);
     }
 

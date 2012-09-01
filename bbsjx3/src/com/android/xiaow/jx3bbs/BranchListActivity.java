@@ -66,8 +66,6 @@ public class BranchListActivity extends BaseFragmentActivity implements
     Button set_btn;
     Button login_btn;
     Button login_out_btn;
-    View login_out;
-    TextView nick_name;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -87,8 +85,6 @@ public class BranchListActivity extends BaseFragmentActivity implements
         login_btn.setOnClickListener(loginListener);
         login_out_btn = (Button) findViewById(R.id.button3);
         login_out_btn.setOnClickListener(loginOutListener);
-        nick_name = (TextView) findViewById(R.id.textView1);
-        login_out = findViewById(R.id.loginOut);
         loadNaviList();
         loadSetting();
         getSupportFragmentManager().addOnBackStackChangedListener(onBackStackChangedListener);
@@ -116,13 +112,13 @@ public class BranchListActivity extends BaseFragmentActivity implements
         String cookies = sp.getString("cookies", null);
         AbstractHttpCommand.set_cookie = null;
         if (LoginFragment.isLogin()) {
-            nick_name.setText(nickname);
             AbstractHttpCommand.set_cookie = cookies;
             login_btn.setVisibility(View.GONE);
-            login_out.setVisibility(View.VISIBLE);
+            login_out_btn.setText("注销   ："+nickname);
+            login_out_btn.setVisibility(View.VISIBLE);
         } else {
             login_btn.setVisibility(View.VISIBLE);
-            login_out.setVisibility(View.GONE);
+            login_out_btn.setVisibility(View.GONE);
         }
     }
 
@@ -170,7 +166,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
             editor.commit();
             slidingGroup.snapToDefault();
             login_btn.setVisibility(View.VISIBLE);
-            login_out.setVisibility(View.GONE);
+            login_out_btn.setVisibility(View.GONE);
             if (mCallBack != null) {
                 mCallBack.onReset();
             }
