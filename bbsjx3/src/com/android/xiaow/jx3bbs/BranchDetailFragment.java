@@ -20,7 +20,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +30,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,9 +45,11 @@ import com.android.xiaow.core.common.Response;
 import com.android.xiaow.core.util.ToastUtil;
 import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
 import com.android.xiaow.jx3bbs.cmds.ReplayRequest;
+import com.android.xiaow.jx3bbs.db.RefuseDB;
 import com.android.xiaow.jx3bbs.model.Card;
 import com.android.xiaow.jx3bbs.model.Cards;
 import com.android.xiaow.jx3bbs.model.MainArea;
+import com.android.xiaow.jx3bbs.model.Refuse;
 import com.android.xiaow.jx3bbs.model.RefuseInfo;
 import com.android.xiaow.jx3bbs.widget.HTMLayout;
 import com.android.xiaow.jx3bbs.widget.PushListView;
@@ -73,7 +78,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     Button refuse;
     ImageView mFastRefuse;
     Cards mCards;
-    EditText et;
+    AutoCompleteTextView et;
     JX3Application application = null;
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller.getIntance());
     RefuseInfo mInfo;
@@ -111,11 +116,16 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         mFastRefuse = (ImageView) getView().findViewById(R.id.button2);
         refuseView = getView().findViewById(R.id.refuse);
         refuseView.setVisibility(View.GONE);
-        et = (EditText) getView().findViewById(R.id.editText1);
+        et = (AutoCompleteTextView) getView().findViewById(R.id.editText1);
+        et.setOnFocusChangeListener(onFocusChangeListener);
+        et.setAdapter(new ArrayAdapter<Refuse>(et.getContext(), R.layout.simple_list_item_1, db
+                .getAll()));
+        et.setThreshold(1);
+        et.setCompletionHint("最近的5条记录");
         /**
          * 暂定方案
          */
-//        mFastRefuse.setVisibility(View.GONE);
+        // mFastRefuse.setVisibility(View.GONE);
         refuse.setVisibility(View.VISIBLE);
         refuse.setOnClickListener(mRefuseListener);
         listView.setonRefreshListener(this);
@@ -128,6 +138,17 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         onReset();
         application = (JX3Application) getActivity().getApplication();
     }
+
+    RefuseDB db = new RefuseDB();
+    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                et.showDropDown();
+            }
+        }
+    };
 
     @Override
     public void onReset() {
@@ -203,7 +224,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             pre_page = cards.cards.size();
             mAdapter = new CardAdapter(cards);
             setListAdapter(mAdapter);
-        } else if (cards.cur_page == 0&&cards.max_page==0&&page_max==0) {
+        } else if (cards.cur_page == 0 && cards.max_page == 0 && page_max == 0) {
             pre_page = cards.cards.size();
             int pre = mAdapter.getCount();
             mAdapter = new CardAdapter(cards);
@@ -276,6 +297,14 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             refuseView.findViewById(R.id.layout1).setVisibility(View.VISIBLE);
             refuseView.findViewById(R.id.layout1).startAnimation(in);
             refuseView.findViewById(R.id.layout2).startAnimation(out);
+            Refuse refuse = db.getRefuse(content);
+            if (refuse == null) {
+                refuse = new Refuse();
+                refuse.content = content;
+            }
+            ++refuse.level;
+            db.update(refuse);
+            et.clearFocus();
         }
     };
     Animation out;
@@ -464,5 +493,4 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         }
 
     }
-
 }
