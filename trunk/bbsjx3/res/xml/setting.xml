@@ -24,6 +24,6 @@
         android:dialogTitle="图片签名地址"
         android:key="sign_url"
         android:summary="点击输入图片签名地址"
-        android:title="EditTextPreference Sample" />
+        android:title="图片签名地址" />
 
 </PreferenceScreen>
