@@ -14,7 +14,7 @@ public class SqliteConn extends SQLiteOpenHelper {
     }
 
     public SqliteConn(Context context) {
-        this(context, "JX3BBS.db", null, 3);
+        this(context, "JX3BBS.db", null, 5);
     }
 
     @Override
@@ -30,11 +30,15 @@ public class SqliteConn extends SQLiteOpenHelper {
                 + "refuse text, url_last text, last_name text, parent text)");
         db.execSQL("CREATE TABLE type ( " + " parent TEXT," + "name TEXT," + "value TEXT,"
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT );");
+        db.execSQL("CREATE TABLE refuse(id INTEGER PRIMARY KEY AUTOINCREMENT,content text UNIQUE, level INTEGER);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (newVersion == 5) {
+            db.execSQL("drop TABLE refuse");
+            db.execSQL("CREATE TABLE refuse(id INTEGER PRIMARY KEY AUTOINCREMENT,content text UNIQUE, level INTEGER);");
+        }
     }
 
     static SQLiteDatabase db;

@@ -55,12 +55,12 @@ public class MainListActivity extends BaseFragmentActivity implements IResponseL
     protected void onResume() {
         super.onResume();
         Controller.getIntance().registerCommand(Initializer.INIT_MAIN_BRACH_CMD_ID, null, this);
-
     }
 
     @SuppressWarnings("all")
     @Override
     public void onSuccess(Response response) {
+        work.removeAllViews();
         HashMap<String, List<MainArea>> map = (HashMap<String, List<MainArea>>) response.result;
         CellLayout cellLayout = null;
         String[] titles = map.keySet().toArray(new String[map.size()]);

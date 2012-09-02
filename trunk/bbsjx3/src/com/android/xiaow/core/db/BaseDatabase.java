@@ -82,7 +82,7 @@ public abstract class BaseDatabase<T> {
             List<String> args = new ArrayList<String>();
             String whereClause = buildWhere(map, t2, args);
             boolean insert = true;
-            if (args.size() > 0) {
+            if (args.size() > 0 && !TextUtils.isEmpty(whereClause)) {
                 insert = (getDatabase().update(mTableName, values, whereClause,
                         args.isEmpty() ? null : args.toArray(new String[args.size()])) > 0) ? false
                         : true;
