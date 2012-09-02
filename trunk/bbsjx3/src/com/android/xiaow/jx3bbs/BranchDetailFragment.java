@@ -183,6 +183,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         window.setContentView(btn);
         window.showAtLocation(getView(), Gravity.NO_GRAVITY, x, y);
     }
+    @SuppressWarnings("deprecation")
     public static void measureView(View child) {
         ViewGroup.LayoutParams p = child.getLayoutParams();
         if (p == null) {
@@ -466,7 +467,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             holder.v2.setText(getItem(postion).leverl);
             if (holder.v2.getText().length() > 3) {
                 String str = holder.v2.getText().toString().substring(3);
-                if (!TextUtils.isDigitsOnly(str)) {
+                if (!TextUtils.isEmpty(str)) {
                     holder.v2.setVisibility(View.VISIBLE);
                     holder.v2.setTextColor(Color.RED);
                 } else {

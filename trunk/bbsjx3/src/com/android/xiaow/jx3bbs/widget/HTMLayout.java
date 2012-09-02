@@ -30,7 +30,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -194,13 +193,14 @@ public class HTMLayout extends LinearLayout {
                 str = str.replaceAll("<[^>]*blockquote>", "");
                 str = str.replaceAll(
                         "<img[^>]*>", "");
-                TextView textView = new TextView(getContext());
+                TextView textView = (TextView)LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_2, null,false);
                 int padding = getResources().getDimensionPixelOffset(R.dimen.padding_small);
                 textView.setPadding(padding, padding, padding, padding);
                 textView.setBackgroundResource(R.drawable.refuse_info);
                 Spanned spanned = Html.fromHtml(str);
                 textView.setText(spanned);
                 addView(textView);
+                
                 continue;
             }
             str = str.replaceAll(REGEX_EMPTY_STRING, "");
@@ -260,8 +260,7 @@ public class HTMLayout extends LinearLayout {
                 } else {
                     s1.add(str);
                 }
-                EditText tv = (EditText) LayoutInflater.from(getContext()).inflate(
-                        R.layout.selectedtext, null, false);
+                TextView tv =  (TextView)LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_2, null,false);
                 tv.setFocusable(true);
                 tv.setFocusableInTouchMode(true);
                 // SpannableStringBuilder spanned = new

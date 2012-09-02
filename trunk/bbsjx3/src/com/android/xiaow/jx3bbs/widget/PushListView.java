@@ -80,7 +80,7 @@ public class PushListView extends ListView implements OnScrollListener {
         progressBar = (ProgressBar) headView.findViewById(R.id.head_progressBar);
         tipsTextview = (TextView) headView.findViewById(R.id.head_tipsTextView);
         lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
-
+        setDividerHeight(0);
         measureView(headView);
         measureView(footView);
         headContentHeight = headView.getMeasuredHeight();
@@ -117,6 +117,12 @@ public class PushListView extends ListView implements OnScrollListener {
                 onFreshMore();
             }
         });
+    }
+
+    public void divider() {
+        setDividerHeight(5);
+        setDivider(getResources().getDrawable(R.color.color3));
+
     }
 
     public void onFreshMore() {

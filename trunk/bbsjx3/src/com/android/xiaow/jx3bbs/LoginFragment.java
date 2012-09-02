@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -117,6 +118,9 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setSaveFormData(false);
         mWebView.getSettings().setSavePassword(false);
+        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//        mWebView.getSettings().setLoadsImagesAutomatically(false);
         mWebView.loadUrl("https://my.xoyo.com/login/login/aHR0cCUzQSUyRiUyRmp4My5iYnMueG95by5jb20lMkZpbmRleC5waHA=__bbs");
     }
 
@@ -176,6 +180,12 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
             cookie = CookieManager.getInstance().getCookie(".xoyo.com");
             buildCookie();
 
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d("MSG", "shouldOverrideUrlLoading------>"+url);
+            return true;
         }
 
     };

@@ -31,8 +31,8 @@ import com.android.xiaow.jx3bbs.model.Bernda;
 public class BranchListAdapter extends BaseAdapter {
     List<Bernda> berndas;
     Context context;
-    int[] color = new int[] { R.color.color0, R.color.color1, R.color.color2, R.color.color4,
-            R.color.color5, R.color.color6, R.color.color7, R.color.color9 };
+    int[] color = new int[] { R.color.color1, R.color.color2, R.color.color4, R.color.color6,
+            R.color.color7, R.color.color9 };
 
     public BranchListAdapter(List<Bernda> berndas, Context context) {
         super();

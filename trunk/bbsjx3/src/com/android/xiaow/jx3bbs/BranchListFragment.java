@@ -9,7 +9,6 @@
 package com.android.xiaow.jx3bbs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,7 +17,6 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.xiaow.core.Controller;
@@ -69,8 +67,6 @@ public class BranchListFragment extends ListFragment implements OnRefreshListene
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,
-                Arrays.asList("item1", "item2", "item3", "item4", "item5")));
         listView = (PushListView) getListView();
         listView.setonRefreshListener(this);
         listView.hideFoot();

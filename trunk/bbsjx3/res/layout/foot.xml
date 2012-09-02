@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="@drawable/card_item_backgroud"
     android:gravity="center"
     android:orientation="vertical" >
 
@@ -26,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15.0dip"
             android:text="正在加载......"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
     <TextView
@@ -36,6 +38,7 @@
         android:layout_marginTop="10.0dip"
         android:gravity="center"
         android:text="点击加载更多"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black" />
 
 </LinearLayout>
