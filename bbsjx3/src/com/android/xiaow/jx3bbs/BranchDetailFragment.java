@@ -20,13 +20,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -35,6 +34,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.xiaow.core.Controller;
@@ -137,8 +137,68 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
         onReset();
         application = (JX3Application) getActivity().getApplication();
+
     }
 
+    private class OnClick implements View.OnClickListener {
+
+        String content;
+
+        public OnClick(String content) {
+            super();
+            this.content = content;
+        }
+
+        @Override
+        public void onClick(View v) {
+            et.setText(content);
+            hidePupop();
+        }
+
+    }
+
+    public void hidePupop() {
+        Log.d("MSG", "hidePupop------>");
+        if (window != null && window.isShowing()) {
+            window.dismiss();
+        }
+    }
+
+    PopupWindow window;
+
+    public void showPupopWindow(String content, int x, int y) {
+        Log.d("MSG", "showPupopWindow------>");
+        if (window != null && window.isShowing()) {
+            window.dismiss();
+        }
+        window = new PopupWindow(getActivity());
+        window.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
+        Button btn = new Button(getActivity());
+        btn.setText("复制");
+        btn.setBackgroundResource(R.drawable.btn_02);
+        btn.setOnClickListener(new OnClick(content));
+        measureView(btn);
+        window.setWidth(btn.getMeasuredWidth());
+        window.setHeight(btn.getMeasuredHeight());
+        window.setContentView(btn);
+        window.showAtLocation(getView(), Gravity.NO_GRAVITY, x, y);
+    }
+    public static void measureView(View child) {
+        ViewGroup.LayoutParams p = child.getLayoutParams();
+        if (p == null) {
+            p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
+        int lpHeight = p.height;
+        int childHeightSpec;
+        if (lpHeight > 0) {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
+        } else {
+            childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        }
+        child.measure(childWidthSpec, childHeightSpec);
+    }
     RefuseDB db = new RefuseDB();
     View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 
@@ -146,6 +206,9 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         public void onFocusChange(View v, boolean hasFocus) {
             if (hasFocus) {
                 et.showDropDown();
+                if (window != null && window.isShowing()) {
+                    window.dismiss();
+                }
             }
         }
     };
@@ -286,6 +349,13 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             replayRequest.usesig = mCards.usesig;
             replayRequest.Content = content + "\r\n\r\n\r\n"
                     + getString(R.string.refuse_buff, Build.MODEL);
+            boolean isSign = sp.getBoolean("isSign", false);
+            if (isSign) {
+                String sign_url = sp.getString("sign_url", "");
+                replayRequest.Content += "\r\n   \t  \r\n    \t   \r\n"
+                        + "[img]http://pic.xoyo.com/bbs/images/default/sigline.gif[/img]"
+                        + "\r\n   \t  \r\n" + "[img]" + sign_url + "[/img]";
+            }
             Controller.getIntance().registerCommand(Initializer.REPLAY_CMD_ID, replayRequest,
                     refuseListener);
             refuse.setEnabled(false);
@@ -305,6 +375,9 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             ++refuse.level;
             db.update(refuse);
             et.clearFocus();
+            if (window != null && window.isShowing()) {
+                window.dismiss();
+            }
         }
     };
     Animation out;
@@ -440,16 +513,14 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             // reflash();
             // }
             // });
-            holder.v5.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (holder.v4.getVisibility() == View.VISIBLE)
-                        holder.v4.setVisibility(View.GONE);
-                    else
-                        holder.v4.setVisibility(View.VISIBLE);
-                }
-            });
+            /*
+             * holder.v5.setOnClickListener(new OnClickListener() {
+             * 
+             * @Override public void onClick(View v) { if
+             * (holder.v4.getVisibility() == View.VISIBLE)
+             * holder.v4.setVisibility(View.GONE); else
+             * holder.v4.setVisibility(View.VISIBLE); } });
+             */
             String str = getItem(postion).time;
             str = str.replace("src=\"image", "src=\"http://jx3.bbs.xoyo.com/image");
             str = str.replace("只看该作者", "");

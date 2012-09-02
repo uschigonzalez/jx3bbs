@@ -13,12 +13,14 @@ import java.util.List;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -35,6 +37,7 @@ import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.cmds.AbstractHttpCommand;
 import com.android.xiaow.core.util.NetUtil;
 import com.android.xiaow.core.util.ToastUtil;
+import com.android.xiaow.jx3bbs.BranchDetailFragment.CardAdapter.Holder;
 import com.android.xiaow.jx3bbs.db.MainBrachDB;
 import com.android.xiaow.jx3bbs.model.MainArea;
 import com.android.xiaow.jx3bbs.model.RefuseInfo;
@@ -360,10 +363,83 @@ public class BranchListActivity extends BaseFragmentActivity implements
             }
             return;
         }
+        if (mCallBack instanceof BranchDetailFragment) {
+            BranchDetailFragment detailFragment = (BranchDetailFragment) mCallBack;
+            detailFragment.hidePupop();
+        }
         if (cur_Fragment instanceof BranchListFragment) {
             finish();
         } else
             super.onBackPressed();
     }
 
+    int offset = 0;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mCallBack instanceof BranchDetailFragment) {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                offset = (int) ev.getX() + (int) ev.getY();
+            }
+            if (ev.getAction() == MotionEvent.ACTION_UP) {
+                offset = Math.abs(offset - ((int) ev.getX() + (int) ev.getY()));
+            }
+            BranchDetailFragment detailFragment = (BranchDetailFragment) mCallBack;
+            Rect rect = new Rect();
+            int yoffset = 0;
+            detailFragment.getView().getHitRect(rect);
+            yoffset = rect.top;
+            detailFragment.getView().getGlobalVisibleRect(rect);
+            yoffset = Math.abs(yoffset - rect.top);
+            int x = (int) ev.getX();
+            int y = (int) ev.getY() - yoffset;
+            if (offset < 20 && offset > -1 && ev.getAction() == MotionEvent.ACTION_UP) {
+                offset = -1;
+                int count = detailFragment.listView.getChildCount();
+
+                for (int i = 0; i < count; i++) {
+                    View view = detailFragment.listView.getChildAt(i);
+                    view.getHitRect(rect);
+                    boolean flag = rect.contains(x, y);
+                    Holder holder = (Holder) view.getTag();
+                    if (holder == null || holder.v4 == null) {
+                        continue;
+                    }
+                    holder.v4.getHitRect(rect);
+                    boolean flag1 = rect.contains(x, y);
+                    if (!flag1) {
+                        holder.v1.getHitRect(rect);
+                        flag1 = rect.contains(x, y);
+                    }
+                    if (!flag1) {
+                        holder.v2.getHitRect(rect);
+                        flag1 = rect.contains(x, y);
+                    }
+                    if (!flag1) {
+                        holder.v3.getHitRect(rect);
+                        flag1 = rect.contains(x, y);
+                    }
+                    if (!flag1) {
+                        holder.v5.getHitRect(rect);
+                        flag1 = rect.contains(x, y);
+                    }
+                    if (flag || flag1) {
+                        detailFragment.showPupopWindow(holder.v4.getCopyContent(), (int) ev.getX(),
+                                (int) ev.getY());
+                        break;
+                    }
+
+                }
+            } else {
+                if (detailFragment.window != null && detailFragment.window.getContentView() != null) {
+                    rect = new Rect();
+                    detailFragment.window.getContentView().getHitRect(rect);
+                    if (!rect.contains(x, y)) {
+                        detailFragment.hidePupop();
+                    }
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }
