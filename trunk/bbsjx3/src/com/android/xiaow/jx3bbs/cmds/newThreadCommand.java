@@ -19,7 +19,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.xiaow.core.cmds.BaseHttpCommand;

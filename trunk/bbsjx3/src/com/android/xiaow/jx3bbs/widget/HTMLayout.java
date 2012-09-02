@@ -80,11 +80,33 @@ public class HTMLayout extends LinearLayout {
 
     boolean isfresh = false;
 
+    public String getCopyContent() {
+        if (TextUtils.isEmpty(copyString))
+            return "";
+        return copyString.replaceAll("<[^>]*>", "");
+    }
+
+    String copyString;
     public void LoadHTML(String str) {
         content = str;
+        copyString=str;
         isfresh = false;
         reset();
-        parserContent(content);
+        if (content.contains("<blockquote>")) {
+            String[] strs = content.split("<[^>]*blockquote>");
+            boolean flag = false;
+            for (String str1 : strs) {
+                if (flag) {
+                    data.add("<blockquote>" + str1 + "</blockquote>");
+                    flag = false;
+                } else
+                    parserContent(str1);
+                if (str1.contains("<div class=\"quote\">")) {
+                    flag = true;
+                }
+            }
+        } else
+            parserContent(content);
         loadView();
     }
 
@@ -168,6 +190,19 @@ public class HTMLayout extends LinearLayout {
         params.topMargin = 10;
         for (int i = 0; i < len; i++) {
             str = data.get(i);
+            if (str.startsWith("<blockquote>")) {
+                str = str.replaceAll("<[^>]*blockquote>", "");
+                str = str.replaceAll(
+                        "<img[^>]*>", "");
+                TextView textView = new TextView(getContext());
+                int padding = getResources().getDimensionPixelOffset(R.dimen.padding_small);
+                textView.setPadding(padding, padding, padding, padding);
+                textView.setBackgroundResource(R.drawable.refuse_info);
+                Spanned spanned = Html.fromHtml(str);
+                textView.setText(spanned);
+                addView(textView);
+                continue;
+            }
             str = str.replaceAll(REGEX_EMPTY_STRING, "");
             if (str.matches(regex_img_0)) {
                 ImageView imv = new ImageView(getContext());
@@ -225,7 +260,8 @@ public class HTMLayout extends LinearLayout {
                 } else {
                     s1.add(str);
                 }
-                EditText tv = (EditText)LayoutInflater.from(getContext()).inflate(R.layout.selectedtext, null, false);
+                EditText tv = (EditText) LayoutInflater.from(getContext()).inflate(
+                        R.layout.selectedtext, null, false);
                 tv.setFocusable(true);
                 tv.setFocusableInTouchMode(true);
                 // SpannableStringBuilder spanned = new
