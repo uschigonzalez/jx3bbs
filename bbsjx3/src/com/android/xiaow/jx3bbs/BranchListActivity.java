@@ -114,7 +114,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
         if (LoginFragment.isLogin()) {
             AbstractHttpCommand.set_cookie = cookies;
             login_btn.setVisibility(View.GONE);
-            login_out_btn.setText("注销   ："+nickname);
+            login_out_btn.setText("注销   ：" + nickname);
             login_out_btn.setVisibility(View.VISIBLE);
         } else {
             login_btn.setVisibility(View.VISIBLE);
@@ -148,7 +148,7 @@ public class BranchListActivity extends BaseFragmentActivity implements
             ft.hide(cur_Fragment);
             LoginFragment loginFragment = new LoginFragment();
             ft.add(R.id.item_list, loginFragment);
-            ft.addToBackStack("login");
+            ft.addToBackStack("login2");
             ft.commit();
             mCallBack = loginFragment;
         }
@@ -350,6 +350,16 @@ public class BranchListActivity extends BaseFragmentActivity implements
 
     @Override
     public void onBackPressed() {
+        if (mCallBack instanceof LoginFragment) {
+            if (mCallBack instanceof LoginFragment) {
+                getSupportFragmentManager().popBackStack();
+                mCallBack = (BranchListActivityCallBack) cur_Fragment;
+            }
+            if (mCallBack instanceof NewThreadFragment) {
+                navigationSelected(cur_Branch);
+            }
+            return;
+        }
         if (cur_Fragment instanceof BranchListFragment) {
             finish();
         } else
