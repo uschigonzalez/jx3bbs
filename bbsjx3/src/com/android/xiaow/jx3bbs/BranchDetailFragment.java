@@ -71,7 +71,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     CardAdapter mAdapter;
     View refuseView;
     Button refuse;
-    Button mFastRefuse;
+    ImageView mFastRefuse;
     Cards mCards;
     EditText et;
     JX3Application application = null;
@@ -108,14 +108,14 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         super.onActivityCreated(savedInstanceState);
         listView = (PushListView) getListView();
         refuse = (Button) getView().findViewById(R.id.button1);
-        mFastRefuse = (Button) getView().findViewById(R.id.button2);
+        mFastRefuse = (ImageView) getView().findViewById(R.id.button2);
         refuseView = getView().findViewById(R.id.refuse);
         refuseView.setVisibility(View.GONE);
         et = (EditText) getView().findViewById(R.id.editText1);
         /**
          * 暂定方案
          */
-        mFastRefuse.setVisibility(View.GONE);
+//        mFastRefuse.setVisibility(View.GONE);
         refuse.setVisibility(View.VISIBLE);
         refuse.setOnClickListener(mRefuseListener);
         listView.setonRefreshListener(this);
