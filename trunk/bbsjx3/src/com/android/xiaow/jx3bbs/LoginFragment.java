@@ -25,8 +25,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.cmds.AbstractHttpCommand;
@@ -70,10 +73,17 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         mCallBack = (CallBack) activity;
     }
 
+    ProgressBar progressBar;
+    TextView tv;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mWebView = new WebView(getActivity());
-        return mWebView;
+        View view = inflater.inflate(R.layout.login, null, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
+        mWebView = (WebView) view.findViewById(R.id.webView1);
+        tv = (TextView) view.findViewById(R.id.textView1);
+        Log.d("MSG", "onCreateView-------->" + (view == null));
+        return view;
     }
 
     @Override
@@ -81,6 +91,26 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         super.onActivityCreated(savedInstanceState);
         CookieSyncManager.createInstance(getActivity());
         CookieManager.getInstance().removeAllCookie();
+        mWebView.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                // TODO Auto-generated method stub
+                super.onProgressChanged(view, newProgress);
+                // Activity和Webview根据加载程度决定进度条的进度大小
+                // 当加载到100%的时候 进度条自动消失
+//                Log.d("MSG", "onCreateView-------->" + newProgress);
+                progressBar.setProgress(newProgress );
+                tv.setText(newProgress  + "%");
+                if (newProgress >= 100) {
+//                    Log.d("MSG", "onCreateView-------->View.GONE");
+
+                    tv.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+        });
         mWebView.setWebViewClient(webViewClient);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAppCacheEnabled(true);
