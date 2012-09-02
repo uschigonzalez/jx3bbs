@@ -20,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.xiaow.core.cmds.BaseHttpCommand;
 import com.android.xiaow.core.common.Response;
@@ -46,6 +47,7 @@ public class ReplayCommand extends BaseHttpCommand {
     @Override
     public Object getSuccesData(HttpResponse response) throws Exception {
         String msg = HttpUtil.getResultFormResponse(response);
+        Log.d("MSG", msg);
         if (getResponse() == null) {
             setResponse(new Response());
         }

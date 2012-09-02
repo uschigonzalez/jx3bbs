@@ -18,3 +18,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-libraryjars ../Android4Style/bin/android4style.jar
+-libraryjars ../com_actionbarsherlock/bin/com_actionbarsherlock.jar
+-libraryjars libs/commons-httpclient-3.1.jar
+-libraryjars D:/android-sdk-windows/tools/support/annotations.jar	
+-libraryjars libs/jsoup-1.6.2.jar
+-libraryjars libs/android_api.jar
+-libraryjars libs/nineoldandroids-2.2.0.jar
+-libraryjars ../com_actionbarsherlock/libs/android-support-v4.jar

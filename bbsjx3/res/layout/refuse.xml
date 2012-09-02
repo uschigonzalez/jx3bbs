@@ -14,7 +14,7 @@
 
         <ProgressBar
             android:id="@+id/progressBar1"
-            style="@style/Widget.Holo.ProgressBar"
+            style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
