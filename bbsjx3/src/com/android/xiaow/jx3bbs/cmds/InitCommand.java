@@ -25,7 +25,7 @@ public class InitCommand extends AbstractCommand {
 
     @Override
     public void go() {
-//        Log.d("MSG", "InitCommand :go ");
+        // Log.d("MSG", "InitCommand :go ");
         // MainBrachConn.getInstance().executeSql(initDBSql);
         SQLiteDatabase db = SqliteConn.getDatabase();
         // Log.d("MSG", "InitCommand :" +
@@ -55,7 +55,7 @@ public class InitCommand extends AbstractCommand {
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '综合讨论区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=7101', 0, 11, 0, 0, '', '', '主版块');",
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '经验技巧区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=8037', 0, 9, 0, 0, '', '', '主版块');",
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '门派讨论区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=7087', 1, 8, 0, 0, '', '', '主版块');",
-            "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '图片、文学区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=7089', 7, 0, 0, 0, '', '', '主版块');",
+            "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '图片、文学区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=7089', 0, 0, 0, 0, '', '', '主版块');",
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '游戏影音区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=8542', 0, 6, 0, 0, '', '', '主版块');",
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '公会区', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=7090', 0, 0, 5, 0, '', '', '主版块');",
             "INSERT INTO MainBrach ( name, url, isSubBroad, today, newthread, refuse, url_last, last_name, parent) VALUES ( '大唐驿报', 'http://jx3.bbs.xoyo.com/forumdisplay.php?fid=8035', 0, 4, 0, 0, '', '', '主版块');",

@@ -6,7 +6,7 @@
  * @date 2012-8-12 下午7:24:39
  * @version V1.0   
  */
-package com.android.xiaow.jx3bbs;
+package com.android.xiaow.jx3bbs.activity;
 
 import java.util.List;
 
@@ -14,11 +14,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.xiaow.jx3bbs.R;
 import com.android.xiaow.jx3bbs.model.Bernda;
 
 /**
@@ -28,38 +27,21 @@ import com.android.xiaow.jx3bbs.model.Bernda;
  * @date 2012-8-12 下午7:24:39
  * 
  */
-public class BranchListAdapter extends BaseAdapter {
-    List<Bernda> berndas;
-    Context context;
+public class BranchListAdapter extends AbstractAdapter<Bernda> {
+
     int[] color = new int[] { R.color.color1, R.color.color2, R.color.color4, R.color.color6,
             R.color.color7, R.color.color9 };
 
     public BranchListAdapter(List<Bernda> berndas, Context context) {
-        super();
-        this.berndas = berndas;
-        this.context = context;
+        super(context, berndas);
+
     }
 
     @Override
-    public int getCount() {
-        return berndas.size();
-    }
-
-    @Override
-    public Bernda getItem(int position) {
-        return berndas.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View CreateView(int position, View convertView, LayoutInflater inflater) {
         Holder holder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.berndaitem, null);
+            convertView = inflater.inflate(R.layout.berndaitem, null);
             holder = new Holder();
             holder.tv1 = (TextView) convertView.findViewById(R.id.textView1);
             holder.tv2 = (TextView) convertView.findViewById(R.id.textView2);
@@ -69,7 +51,12 @@ public class BranchListAdapter extends BaseAdapter {
             holder.postion = position;
             convertView.setTag(holder);
         }
-        convertView.setBackgroundResource(color[position % color.length]);
+        if (position % 2 == 0) {
+            convertView.setBackgroundResource(R.drawable.item_back12);
+        } else {
+            convertView.setBackgroundResource(R.drawable.item_back13);
+
+        }
 
         holder = (Holder) convertView.getTag();
         Bernda bernda = getItem(position);
@@ -96,13 +83,4 @@ public class BranchListAdapter extends BaseAdapter {
         public int postion;
     }
 
-    public void changeData(List<Bernda> data) {
-        this.berndas = data;
-        notifyDataSetChanged();
-    }
-
-    public void addData(List<Bernda> data) {
-        this.berndas.addAll(data);
-        notifyDataSetChanged();
-    }
 }

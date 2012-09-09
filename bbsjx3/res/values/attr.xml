@@ -21,6 +21,7 @@
         <attr name="longAxisCells" format="integer" />
         <attr name="WidthGap" format="dimension" />
         <attr name="HeightGap" format="dimension" />
+        <attr name="orientation" format="boolean"></attr>
     </declare-styleable>
     <declare-styleable name="Workspace">
 

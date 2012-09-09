@@ -7,7 +7,6 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="15" />
 
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -42,24 +41,33 @@
             android:theme="@style/Theme.Sherlock.NoActionBar" >
         </activity>
         <activity
-            android:name="MainListActivity"
+            android:name=".activity.MainListActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:theme="@style/Theme.Sherlock.NoActionBar" >
         </activity>
         <activity
-            android:name="BranchListActivity"
+            android:name=".activity.BrachListAtivity"
             android:theme="@style/Theme.AndroidDevelopers" >
         </activity>
         <activity
-            android:name="BranchDetailActivity"
+            android:name=".activity.BranchDetailActivity"
             android:theme="@style/Theme.AndroidDevelopers" >
         </activity>
-
-        <!-- <service android:name="com.android.xiaow.core.service.LogService" >
+        <activity
+            android:name=".activity.LoginActvity"
+            android:theme="@style/Theme.AndroidDevelopers" >
+        </activity>
+        <activity
+            android:name=".activity.NewThreadActivity"
+            android:theme="@style/Theme.AndroidDevelopers" >
+        </activity>
+        <!--
+        <service android:name="com.android.xiaow.core.service.LogService" >
             <intent-filter>
                 <action android:name="com.android.xiaow.core.service.logservice" />
             </intent-filter>
-        </service>
- -->
+        </service>
+        -->
         <!-- 渠道商编号 -->
         <meta-data
             android:name="BaiduMobAd_CHANNEL"

@@ -52,8 +52,8 @@ public class PushListView extends ListView implements OnScrollListener {
     private OnRefreshListener refreshListener;
     private boolean isRefreshable;
     private View footView;
-    protected int footContentWidth;
-    protected int footContentHeight;
+//    protected int footContentWidth;
+//    protected int footContentHeight;
     int i = 1;
     protected int foot_state = View.GONE;
 
@@ -82,13 +82,13 @@ public class PushListView extends ListView implements OnScrollListener {
         lastUpdatedTextView = (TextView) headView.findViewById(R.id.head_lastUpdatedTextView);
         setDividerHeight(0);
         measureView(headView);
-        measureView(footView);
+//        measureView(footView);
         headContentHeight = headView.getMeasuredHeight();
         headContentWidth = headView.getMeasuredWidth();
-        footContentHeight = footView.getMeasuredHeight();
-        footContentWidth = footView.getMeasuredWidth();
+//        footContentHeight = footView.getMeasuredHeight();
+//        footContentWidth = footView.getMeasuredWidth();
         footView.setVisibility(View.VISIBLE);
-        headView.setPadding(0, -1 * headContentHeight, 0, 0);
+//        headView.setPadding(0, -1 * headContentHeight, 0, 0);
         headView.invalidate();
         footView.invalidate();
         footView.setPadding(0, 0, 0, 0);
@@ -122,7 +122,6 @@ public class PushListView extends ListView implements OnScrollListener {
     public void divider() {
         setDividerHeight(5);
         setDivider(getResources().getDrawable(R.color.color3));
-
     }
 
     public void onFreshMore() {
@@ -379,7 +378,7 @@ public class PushListView extends ListView implements OnScrollListener {
     }
 
     public void setAdapter(BaseAdapter adapter) {
-        lastUpdatedTextView.setText("this is in MyListView:" + sdf.format(new Date()));
+        lastUpdatedTextView.setText("当前加载时间:" + sdf.format(new Date()));
         if (adapter.getCount() == 0) {
             footView.setVisibility(View.GONE);
         }
