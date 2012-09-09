@@ -6,23 +6,19 @@
  * @date 2012-8-12 下午10:52:43
  * @version V1.0   
  */
-package com.android.xiaow.jx3bbs;
+package com.android.xiaow.jx3bbs.activity;
 
 import java.net.URLDecoder;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -32,12 +28,11 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.xiaow.core.BaseFragmentActivity;
 import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.cmds.AbstractHttpCommand;
 import com.android.xiaow.core.util.ToastUtil;
-import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
-import com.android.xiaow.jx3bbs.model.MainArea;
-import com.android.xiaow.jx3bbs.model.RefuseInfo;
+import com.android.xiaow.jx3bbs.R;
 
 /**
  * @ClassName: LoginFragment
@@ -47,65 +42,33 @@ import com.android.xiaow.jx3bbs.model.RefuseInfo;
  * 
  */
 @SuppressLint("SetJavaScriptEnabled")
-public class LoginFragment extends Fragment implements BranchListActivityCallBack {
+public class LoginActvity extends BaseFragmentActivity {
 
-    CallBack mCallBack;
     WebView mWebView;
     String cookie;
-    LoginFinishCallBack loginFinishCallBack;
-
-    private synchronized void finish() {
-        if (loginFinishCallBack != null) {
-            loginFinishCallBack.loginFinish();
-            loginFinishCallBack = null;
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        isShow = false;
-        if (!(activity instanceof CallBack)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-        if (activity instanceof LoginFinishCallBack) {
-            loginFinishCallBack = (LoginFinishCallBack) activity;
-        }
-        mCallBack = (CallBack) activity;
-    }
+    public static final int RESULT_OK = 100;
 
     ProgressBar progressBar;
     TextView tv;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.login, null, false);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
-        mWebView = (WebView) view.findViewById(R.id.webView1);
-        tv = (TextView) view.findViewById(R.id.textView1);
-        Log.d("MSG", "onCreateView-------->" + (view == null));
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        CookieSyncManager.createInstance(getActivity());
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.login);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        mWebView = (WebView) findViewById(R.id.webView1);
+        tv = (TextView) findViewById(R.id.textView1);
+        CookieSyncManager.createInstance(this);
         CookieManager.getInstance().removeAllCookie();
         mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                // TODO Auto-generated method stub
                 super.onProgressChanged(view, newProgress);
-                // Activity和Webview根据加载程度决定进度条的进度大小
-                // 当加载到100%的时候 进度条自动消失
-//                Log.d("MSG", "onCreateView-------->" + newProgress);
-                progressBar.setProgress(newProgress );
-                tv.setText(newProgress  + "%");
-                if (newProgress >= 100) {
-//                    Log.d("MSG", "onCreateView-------->View.GONE");
 
+                progressBar.setProgress(newProgress);
+                tv.setText(newProgress + "%");
+                if (newProgress >= 100) {
                     tv.setVisibility(View.GONE);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -118,22 +81,21 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setSaveFormData(false);
         mWebView.getSettings().setSavePassword(false);
-        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-//        mWebView.getSettings().setLoadsImagesAutomatically(false);
         mWebView.loadUrl("https://my.xoyo.com/login/login/aHR0cCUzQSUyRiUyRmp4My5iYnMueG95by5jb20lMkZpbmRleC5waHA=__bbs");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CookieSyncManager.createInstance(getActivity()).stopSync();
+        CookieSyncManager.createInstance(this).stopSync();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CookieSyncManager.createInstance(getActivity()).startSync();
+        CookieSyncManager.createInstance(this).startSync();
     }
 
     /**
@@ -146,12 +108,6 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
                 .getIntance());
         return !(TextUtils.isEmpty(sp.getString("nickname", null)) || TextUtils.isEmpty(sp
                 .getString("cookies", null)));
-    }
-
-    @Override
-    public void onReset() {
-        if (mCallBack != null)
-            mCallBack.resetEnd();
     }
 
     WebViewClient webViewClient = new WebViewClient() {
@@ -184,7 +140,10 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.d("MSG", "shouldOverrideUrlLoading------>"+url);
+            Log.d("MSG", "shouldOverrideUrlLoading------>" + url);
+            Log.d("MSG", "登陆成功");
+            cookie = CookieManager.getInstance().getCookie(".xoyo.com");
+            buildCookie();
             return true;
         }
 
@@ -212,20 +171,12 @@ public class LoginFragment extends Fragment implements BranchListActivityCallBac
         editor.putString("cookies", cookie);
         editor.commit();
         if (!TextUtils.isEmpty(nickname) && !isShow) {
-            finish();
+            setResult(RESULT_OK);
             isShow = true;
             ToastUtil.show("欢迎登陆：" + nickname);
+            finish();
+
         }
-    }
-
-    @Override
-    public void loadBranch(MainArea branch) {
-
-    }
-
-    @Override
-    public RefuseInfo getInfo() {
-        return null;
     }
 
 }

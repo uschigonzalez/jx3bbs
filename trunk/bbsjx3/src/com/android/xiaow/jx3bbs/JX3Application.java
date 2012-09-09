@@ -20,16 +20,6 @@ import com.android.xiaow.core.Controller;
 public class JX3Application extends Controller {
     public long lastRefuse = 0L;
 
-    @Override
-    public void appStart() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void appStop() {
-        // TODO Auto-generated method stub
-
-    }
+  
 
 }

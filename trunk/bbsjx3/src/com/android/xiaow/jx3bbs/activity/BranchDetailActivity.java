@@ -1,37 +1,31 @@
 /**   
- * @Title: BrachDetailFragment.java
- * @Package com.android.xiaow.jx3bbs
+ * @Title: BranchDetailActivity.java
+ * @Package com.android.xiaow.jx3bbs.activity
  * @Description: TODO(用一句话描述该文件做什么)
  * @author xiaowei xiaowei_8852@sina.com
- * @date 2012-8-12 上午10:59:10
+ * @date 2012-9-6 下午9:38:00
  * @version V1.0   
  */
-package com.android.xiaow.jx3bbs;
+package com.android.xiaow.jx3bbs.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.MeasureSpec;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -43,7 +37,9 @@ import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Request;
 import com.android.xiaow.core.common.Response;
 import com.android.xiaow.core.util.ToastUtil;
-import com.android.xiaow.jx3bbs.BranchListFragment.CallBack;
+import com.android.xiaow.jx3bbs.AsyncImageLoad;
+import com.android.xiaow.jx3bbs.JX3Application;
+import com.android.xiaow.jx3bbs.R;
 import com.android.xiaow.jx3bbs.cmds.ReplayRequest;
 import com.android.xiaow.jx3bbs.db.RefuseDB;
 import com.android.xiaow.jx3bbs.model.Card;
@@ -56,14 +52,15 @@ import com.android.xiaow.jx3bbs.widget.PushListView;
 import com.android.xiaow.jx3bbs.widget.PushListView.OnRefreshListener;
 
 /**
- * @ClassName: BrachDetailFragment
+ * @ClassName: BranchDetailActivity
  * @Description: TODO(这里用一句话描述这个类的作用)
  * @author xiaowei xiaowei_8852@sina.com
- * @date 2012-8-12 上午10:59:10
+ * @date 2012-9-6 下午9:38:00
  * 
  */
-public class BranchDetailFragment extends ListFragment implements BranchListActivityCallBack,
-        OnRefreshListener, IResponseListener {
+public class BranchDetailActivity extends BaseBranchActivity implements IResponseListener,
+        OnRefreshListener {
+    public static final int RESULT_OK = 102;
     public static String URL_ITEM_ID = "url_item";
     public static String NAME_TITEL_ITEM = "name_title";
     String url;
@@ -71,7 +68,6 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     PushListView listView;
     int page = 0;
     int page_max;
-    BranchListFragment.CallBack mCallBack;
     TextView title_TextView;
     CardAdapter mAdapter;
     View refuseView;
@@ -80,43 +76,20 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     Cards mCards;
     AutoCompleteTextView et;
     JX3Application application = null;
-    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller.getIntance());
-    RefuseInfo mInfo;
+    RefuseDB db = new RefuseDB();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(URL_ITEM_ID)) {
-            url = getArguments().getString(URL_ITEM_ID);
-        }
-        if (getArguments().containsKey(NAME_TITEL_ITEM)) {
-            title = getArguments().getString(NAME_TITEL_ITEM);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.branch_detail_fragment, container, false);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof CallBack)) {
-            throw new IllegalStateException("Activity must implement fragment's callbacks.");
-        }
-        mCallBack = (CallBack) activity;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        listView = (PushListView) getListView();
-        refuse = (Button) getView().findViewById(R.id.button1);
-        mFastRefuse = (ImageView) getView().findViewById(R.id.button2);
-        refuseView = getView().findViewById(R.id.refuse);
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.branch_detail_fragment);
+        url = getIntent().getStringExtra(URL_ITEM_ID);
+        title = getIntent().getStringExtra(NAME_TITEL_ITEM);
+        listView = (PushListView) findViewById(android.R.id.list);
+        refuse = (Button) findViewById(R.id.button1);
+        mFastRefuse = (ImageView) findViewById(R.id.button2);
+        refuseView = findViewById(R.id.refuse);
         refuseView.setVisibility(View.GONE);
-        et = (AutoCompleteTextView) getView().findViewById(R.id.editText1);
+        et = (AutoCompleteTextView) findViewById(R.id.editText1);
         et.setOnFocusChangeListener(onFocusChangeListener);
         et.setAdapter(new ArrayAdapter<Refuse>(et.getContext(), R.layout.simple_list_item_1, db
                 .getAll()));
@@ -128,115 +101,17 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         // mFastRefuse.setVisibility(View.GONE);
         refuse.setVisibility(View.VISIBLE);
         refuse.setOnClickListener(mRefuseListener);
+        mAdapter = new CardAdapter(this, new ArrayList<Card>());
         listView.setonRefreshListener(this);
+        listView.setAdapter(mAdapter);
         listView.hideFoot();
-        title_TextView = (TextView) getView().findViewById(R.id.textView1);
+        title_TextView = (TextView) findViewById(R.id.textView1);
         if (!TextUtils.isEmpty(title)) {
             title_TextView.setText(title);
         }
         refuseView.findViewById(R.id.layout1).setVisibility(View.GONE);
-        onReset();
-        application = (JX3Application) getActivity().getApplication();
-
-    }
-
-    private class OnClick implements View.OnClickListener {
-
-        String content;
-
-        public OnClick(String content) {
-            super();
-            this.content = content;
-        }
-
-        @Override
-        public void onClick(View v) {
-            et.setText(content);
-            hidePupop();
-        }
-
-    }
-
-    public void hidePupop() {
-        Log.d("MSG", "hidePupop------>");
-        if (window != null && window.isShowing()) {
-            window.dismiss();
-        }
-    }
-
-    PopupWindow window;
-
-    public void showPupopWindow(String content, int x, int y) {
-        Log.d("MSG", "showPupopWindow------>");
-        if (window != null && window.isShowing()) {
-            window.dismiss();
-        }
-        window = new PopupWindow(getActivity());
-        window.setBackgroundDrawable(getResources().getDrawable(android.R.color.transparent));
-        Button btn = new Button(getActivity());
-        btn.setText("复制");
-        btn.setBackgroundResource(R.drawable.btn_02);
-        btn.setOnClickListener(new OnClick(content));
-        measureView(btn);
-        window.setWidth(btn.getMeasuredWidth());
-        window.setHeight(btn.getMeasuredHeight());
-        window.setContentView(btn);
-        window.showAtLocation(getView(), Gravity.NO_GRAVITY, x, y);
-    }
-    @SuppressWarnings("deprecation")
-    public static void measureView(View child) {
-        ViewGroup.LayoutParams p = child.getLayoutParams();
-        if (p == null) {
-            p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-        }
-        int childWidthSpec = ViewGroup.getChildMeasureSpec(0, 0 + 0, p.width);
-        int lpHeight = p.height;
-        int childHeightSpec;
-        if (lpHeight > 0) {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(lpHeight, MeasureSpec.EXACTLY);
-        } else {
-            childHeightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        }
-        child.measure(childWidthSpec, childHeightSpec);
-    }
-    RefuseDB db = new RefuseDB();
-    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                et.showDropDown();
-                if (window != null && window.isShowing()) {
-                    window.dismiss();
-                }
-            }
-        }
-    };
-
-    @Override
-    public void onReset() {
-        if (mAdapter == null) {
-            Cards cards = new Cards();
-            cards.cards = new ArrayList<Card>();
-            mAdapter = new CardAdapter(cards);
-            setListAdapter(mAdapter);
-        }
-        if (listView == null) {
-            ToastUtil.show("请尝试手动下拉刷新！！");
-            return;
-        }
-        if (page == 0 || page_max == 1) {
-            listView.hideFoot();
-            listView.onFresh(false);
-        } else {
-            listView.onFreshMore();
-        }
-        mInfo = null;
-    }
-
-    @Override
-    public void loadBranch(MainArea branch) {
+        menuRefresh();
+        application = (JX3Application) getApplication();
     }
 
     @Override
@@ -250,7 +125,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             if (page > page_max)
                 page = page_max;
         }
-        request.url = url + "&" + BranchListFragment.PAGE_FIELD + "=" + page;
+        request.url = url + "&" + PAGE_FIELD + "=" + page;
         Controller.getIntance().registerCommand(Initializer.CARD_CMD_ID, request, this);
     }
 
@@ -260,13 +135,8 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         page++;
         if (page > page_max)
             page = page_max;
-        request.url = url + "&" + BranchListFragment.PAGE_FIELD + "=" + page;
+        request.url = url + "&" + PAGE_FIELD + "=" + page;
         Controller.getIntance().registerCommand(Initializer.CARD_CMD_ID, request, this);
-    }
-
-    @Override
-    public RefuseInfo getInfo() {
-        return mInfo;
     }
 
     int pre_page = 0;
@@ -284,19 +154,17 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             datas.addAll(cards.cards);
             mAdapter.changeData(datas);
             listView.setSelection(pre_count - 1);
-        } else if (listView.isrefresh()) {
-            pre_page = cards.cards.size();
-            mAdapter = new CardAdapter(cards);
-            setListAdapter(mAdapter);
-        } else if (cards.cur_page == 0 && cards.max_page == 0 && page_max == 0) {
+        }/*
+          * else if (listView.isrefresh()) { pre_page = cards.cards.size();
+          * mAdapter.changeData(cards.cards); }
+          */else if (cards.cur_page == 0 && cards.max_page == 0 && page_max == 0) {
             pre_page = cards.cards.size();
             int pre = mAdapter.getCount();
-            mAdapter = new CardAdapter(cards);
-            setListAdapter(mAdapter);
+            mAdapter.changeData(cards.cards);
             listView.setSelection(pre - 1);
         } else {
             pre_page = cards.cards.size();
-            mAdapter.addData(cards);
+            mAdapter.addMore(cards.cards);
         }
         if (cards.hasNextPage) {
             page = cards.cur_page;
@@ -325,6 +193,22 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
         mInfo.gid = mCards.gid;
     }
 
+    @Override
+    public void onError(Response response) {
+        onLoadComplete();
+        ToastUtil.show(response.errorMsg);
+        page = Math.max(1, --page);
+    }
+
+    public void onLoadComplete() {
+        onMenuItemFreshFinish();
+        listView.onAddMoreComplete();
+        listView.onRefreshComplete();
+    }
+
+    PopupWindow window;
+    Animation out;
+    Animation in;
     View.OnClickListener mRefuseListener = new View.OnClickListener() {
 
         @Override
@@ -361,8 +245,8 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
                     refuseListener);
             refuse.setEnabled(false);
             et.setEnabled(false);
-            out = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down_out);
-            in = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up_in);
+            out = AnimationUtils.loadAnimation(BranchDetailActivity.this, R.anim.slide_down_out);
+            in = AnimationUtils.loadAnimation(BranchDetailActivity.this, R.anim.slide_up_in);
             out.setFillAfter(true);
             in.setFillAfter(true);
             refuseView.findViewById(R.id.layout1).setVisibility(View.VISIBLE);
@@ -381,8 +265,7 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             }
         }
     };
-    Animation out;
-    Animation in;
+
     IResponseListener refuseListener = new IResponseListener() {
 
         @Override
@@ -411,60 +294,66 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
     };
 
     @Override
-    public void onError(Response response) {
-        onLoadComplete();
-        ToastUtil.show(response.errorMsg);
-        page = Math.max(1, --page);
+    public void navigationSelected(MainArea mainArea) {
+        Intent intent = new Intent();
+        intent.putExtra("MAIN_AREA", mainArea);
+        if (mainArea.name.equals(branch_name))
+            return;
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
-    public void onLoadComplete() {
-        if (mCallBack != null) {
-            mCallBack.resetEnd();
-        }
-        listView.onAddMoreComplete();
-        listView.onRefreshComplete();
-    }
-
-    class CardAdapter extends BaseAdapter {
-        List<Card> data;
-
-        public CardAdapter(Cards cards) {
-            super();
-            this.data = cards.cards;
-        }
+    View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
 
         @Override
-        public int getCount() {
-            return data == null ? 0 : data.size();
-        }
-
-        @Override
-        public Card getItem(int arg0) {
-            return data.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return arg0;
-        }
-
-        @Override
-        public View getView(final int postion, View arg1, ViewGroup arg2) {
-            if (arg1 == null) {
-                arg1 = getActivity().getLayoutInflater().inflate(R.layout.carditem, null);
-                Holder holder = new Holder();
-                holder.v1 = (TextView) arg1.findViewById(R.id.textView1);
-                holder.v2 = (TextView) arg1.findViewById(R.id.textView2);
-                holder.v3 = (TextView) arg1.findViewById(R.id.textView3);
-                holder.v5 = (TextView) arg1.findViewById(R.id.textView4);
-                holder.v4 = (HTMLayout) arg1.findViewById(R.id.layout1);
-                holder.m1 = (ImageView) arg1.findViewById(R.id.imageView1);
-                // holder.m2 = (ImageView) arg1.findViewById(R.id.imageView2);
-                arg1.setTag(holder);
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus) {
+                et.showDropDown();
+                if (window != null && window.isShowing()) {
+                    window.dismiss();
+                }
             }
-            final Holder holder = (Holder) arg1.getTag();
-            holder.v1.setText(getItem(postion).author);
-            holder.v2.setText(getItem(postion).leverl);
+        }
+    };
+
+    @Override
+    public void menuRefresh() {
+        listView.onFresh();
+    }
+
+    @Override
+    public RefuseInfo getInfo() {
+        return mInfo;
+    }
+
+    @Override
+    public void newThreadFinish(Intent data) {
+        finish();
+    }
+
+    class CardAdapter extends AbstractAdapter<Card> {
+
+        public CardAdapter(Context context, List<Card> data) {
+            super(context, data);
+        }
+
+        @Override
+        public View CreateView(int position, View convertView, LayoutInflater inflater) {
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.carditem, null);
+                Holder holder = new Holder();
+                holder.v1 = (TextView) convertView.findViewById(R.id.textView1);
+                holder.v2 = (TextView) convertView.findViewById(R.id.textView2);
+                holder.v3 = (TextView) convertView.findViewById(R.id.textView3);
+                holder.v5 = (TextView) convertView.findViewById(R.id.textView4);
+                holder.v4 = (HTMLayout) convertView.findViewById(R.id.layout1);
+                holder.m1 = (ImageView) convertView.findViewById(R.id.imageView1);
+                // holder.m2 = (ImageView) arg1.findViewById(R.id.imageView2);
+                convertView.setTag(holder);
+            }
+            final Holder holder = (Holder) convertView.getTag();
+            holder.v1.setText(getItem(position).author);
+            holder.v2.setText(getItem(position).leverl);
             if (holder.v2.getText().length() > 3) {
                 String str = holder.v2.getText().toString().substring(3);
                 if (!TextUtils.isEmpty(str)) {
@@ -476,53 +365,18 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             } else {
                 holder.v2.setVisibility(View.GONE);
             }
-            holder.v5.setText((postion + 1) + "#");
-            holder.position = postion;
+            holder.v5.setText((position + 1) + "#");
+            holder.position = position;
             holder.m1.setImageResource(R.drawable.noavatar);
-            String url = getItem(postion).image_au1;
+            String url = getItem(position).image_au1;
             if (!TextUtils.isEmpty(url)
                     && !"http://jx3.bbs.xoyo.com/images/avatars/noavatar.gif".equals(url)
                     && !"jx3.bbs.xoyo.com/images/avatars/noavatar.gif".equals(url)) {
-
-                AsyncImageLoad.LoadImage(getItem(postion).image_au1, AsyncImageLoad.GRAVATAR,
+                AsyncImageLoad.LoadImage(getItem(position).image_au1, AsyncImageLoad.GRAVATAR,
                         holder.m1, null);
             }
-            // ImageViewObserver observer = new ImageViewObserver(holder.m1,
-            // false);
-            // SyncLoadImage.getIntance().LoadBitmap(getItem(postion).image_au1,
-            // observer, SyncLoadImage.GRAVATAR);
             holder.m1.setFocusable(false);
-            // holder.m1.setOnClickListener(new OnClickListener() {
-            //
-            // @Override
-            // public void onClick(View v) {
-            // if (state == ONLY_AUTHOR) {
-            // subffix="";
-            // state = ALL_AUTHOR;
-            // pre_state = ONLY_AUTHOR;
-            // Toast.makeText(getActivity(), "正在切换至查看所有楼层",
-            // Toast.LENGTH_LONG).show();
-            // } else {
-            // subffix="&authorid="+ getItem(postion).authorid;
-            // state = ONLY_AUTHOR;
-            // pre_state = ALL_AUTHOR;
-            // Toast.makeText(getActivity(),
-            // "正在切换至只看该作者 ：" + getItem(postion).author,
-            // Toast.LENGTH_LONG).show();
-            // }
-            // Log.d("BUG", cur_url);
-            // reflash();
-            // }
-            // });
-            /*
-             * holder.v5.setOnClickListener(new OnClickListener() {
-             * 
-             * @Override public void onClick(View v) { if
-             * (holder.v4.getVisibility() == View.VISIBLE)
-             * holder.v4.setVisibility(View.GONE); else
-             * holder.v4.setVisibility(View.VISIBLE); } });
-             */
-            String str = getItem(postion).time;
+            String str = getItem(position).time;
             str = str.replace("src=\"image", "src=\"http://jx3.bbs.xoyo.com/image");
             str = str.replace("只看该作者", "");
             str = str.replace("|", "");
@@ -532,25 +386,9 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             if (matcher.find()) {
                 holder.v3.setText(matcher.group());
             }
-            holder.v4.setActivity(getActivity());
-            holder.v4.LoadHTML(getItem(postion).detail);
-            return arg1;
-        }
-
-        public void changeData(Cards cards) {
-            changeData(cards.cards);
-        }
-
-        public void changeData(List<Card> cards) {
-            if (data != null)
-                data.clear();
-            data = cards;
-            this.notifyDataSetChanged();
-        }
-
-        public void addData(Cards cards) {
-            this.data.addAll(cards.cards);
-            this.notifyDataSetChanged();
+            holder.v4.setActivity(BranchDetailActivity.this);
+            holder.v4.LoadHTML(getItem(position).detail);
+            return convertView;
         }
 
         class Holder {
@@ -563,6 +401,6 @@ public class BranchDetailFragment extends ListFragment implements BranchListActi
             HTMLayout v4;
             int position = -1;
         }
-
     }
+
 }

@@ -338,7 +338,11 @@ public class Workspace extends ViewGroup {
         clearVacantCache();
 
         final CellLayout group = (CellLayout) getChildAt(screen);
+
         CellLayout.LayoutParams lp = (CellLayout.LayoutParams) child.getLayoutParams();
+//        int cWidthSpec = MeasureSpec.makeMeasureSpec(group.getLayoutParams().width, MeasureSpec.EXACTLY);
+//        int cHeightSpec = MeasureSpec.makeMeasureSpec(group.getLayoutParams().height, MeasureSpec.EXACTLY);
+//        group.onMeasure(MeasureSpec.EXACTLY, MeasureSpec.EXACTLY);
         if (lp == null) {
             lp = new CellLayout.LayoutParams(x, y, spanX, spanY);
         } else {

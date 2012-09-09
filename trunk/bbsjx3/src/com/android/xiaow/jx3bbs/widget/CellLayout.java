@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -113,10 +114,10 @@ public class CellLayout extends ViewGroup {
         mLongAxisCells = a.getInt(R.styleable.CellLayout_longAxisCells, 4);
         mHeightGap = a.getDimensionPixelSize(R.styleable.CellLayout_HeightGap, default_dimen);
         mWidthGap = a.getDimensionPixelSize(R.styleable.CellLayout_WidthGap, default_dimen);
+        mPortrait = a.getBoolean(R.styleable.CellLayout_orientation, true);
         a.recycle();
 
         setAlwaysDrawnWithCacheEnabled(false);
-
         if (mOccupied == null) {
             if (mPortrait) {
                 mOccupied = new boolean[mShortAxisCells][mLongAxisCells];
@@ -514,6 +515,8 @@ public class CellLayout extends ViewGroup {
         }
     }
 
+    boolean changeProtrait = false;
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // TODO: currently ignoring padding
@@ -542,8 +545,9 @@ public class CellLayout extends ViewGroup {
         // mCellHeight = (heightSpecSize - longAxisEndPadding
         // - longAxisStartPadding - numLongGaps * 13)
         // / longAxisCells;
-
+        changeProtrait = mPortrait;
         mPortrait = heightSpecSize > widthSpecSize;
+        changeProtrait = changeProtrait != mPortrait ? true : false;
         buildOccupied();
         if (mPortrait) {
             // int vSpaceLeft = heightSpecSize - longAxisStartPadding
@@ -586,7 +590,12 @@ public class CellLayout extends ViewGroup {
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
-
+            if (changeProtrait) {
+                int[] _vacant = new int[2];
+                getVacantCell(_vacant, lp.cellHSpan, lp.cellVSpan);
+                lp.cellX = _vacant[0];
+                lp.cellY = _vacant[1];
+            }
             if (mPortrait) {
                 lp.setup(cellWidth, cellHeight, mWidthGap, mHeightGap, shortAxisStartPadding,
                         longAxisStartPadding);
@@ -843,14 +852,17 @@ public class CellLayout extends ViewGroup {
      * @return True if a vacant cell was found
      */
     public boolean getVacantCell(int[] vacant, int spanX, int spanY) {
+        Log.d("MSG", "getVacantCell---->:" + mPortrait);
         final boolean portrait = mPortrait;
         final int xCount = portrait ? mShortAxisCells : mLongAxisCells;
         final int yCount = portrait ? mLongAxisCells : mShortAxisCells;
         buildOccupied();
         final boolean[][] occupied = mOccupied;
-//        Log.d("BUG", "getVacantCell------->" + mPortrait + ",xCount:" + xCount + ",yCount:"
-//                + yCount);
-//        Log.d("BUG", "getVacantCell------->" + mOccupied.length + "," + occupied[0].length);
+        // Log.d("BUG", "getVacantCell------->" + mPortrait + ",xCount:" +
+        // xCount + ",yCount:"
+        // + yCount);
+        // Log.d("BUG", "getVacantCell------->" + mOccupied.length + "," +
+        // occupied[0].length);
         findOccupiedCells(xCount, yCount, occupied, null);
 
         return findVacantCell(vacant, spanX, spanY, xCount, yCount, occupied);

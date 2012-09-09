@@ -9,6 +9,8 @@
 package com.android.xiaow.core;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.android.xiaow.jx3bbs.R;
@@ -22,6 +24,8 @@ import com.baidu.mobstat.StatService;
  * 
  */
 public class BaseFragmentActivity extends SherlockFragmentActivity {
+    protected SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(Controller
+            .getIntance());
 
     @Override
     public void startActivity(Intent intent) {

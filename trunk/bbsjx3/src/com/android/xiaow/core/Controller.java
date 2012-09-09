@@ -8,14 +8,9 @@
  */
 package com.android.xiaow.core;
 
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.Application;
-import android.content.Context;
 import android.os.Handler;
 
 import com.android.xiaow.core.common.DefaultResponseListener;
@@ -45,45 +40,8 @@ public abstract class Controller extends Application {
         super.onCreate();
         instance = this;
         handler = new Handler();
-        startTimer();
     }
 
-    /**
-     * @Title: startTimer
-     * @Description: TODO(这里用一句话描述这个方法的作用)
-     */
-    private void startTimer() {
-        timer = new Timer();
-        appStart();
-        timer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                if (!isActived()) {
-                    appStop();
-                    timer.cancel();
-                    timer = null;
-                }
-            }
-        }, 0, 1000);
-    }
-
-    public abstract void appStart();
-
-    public abstract void appStop();
-
-    public boolean isActived() {
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        boolean isActived = false;
-        List<RunningTaskInfo> mRunServices = am.getRunningTasks(30);
-        for (RunningTaskInfo info : mRunServices) {
-            if (info.topActivity.getPackageName().equals(getPackageName())) {
-                isActived = true;
-                break;
-            }
-        }
-        return isActived;
-    }
 
     public void registerCommand(int commandId) {
         registerCommand(commandId, null);

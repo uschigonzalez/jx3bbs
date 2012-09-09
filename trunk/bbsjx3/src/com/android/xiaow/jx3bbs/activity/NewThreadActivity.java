@@ -6,36 +6,34 @@
  * @date 2012-8-19 上午9:05:21
  * @version V1.0   
  */
-package com.android.xiaow.jx3bbs;
+package com.android.xiaow.jx3bbs.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.xiaow.core.BaseFragmentActivity;
 import com.android.xiaow.core.Controller;
 import com.android.xiaow.core.Initializer;
 import com.android.xiaow.core.common.IResponseListener;
 import com.android.xiaow.core.common.Response;
 import com.android.xiaow.core.util.ToastUtil;
+import com.android.xiaow.jx3bbs.R;
 import com.android.xiaow.jx3bbs.cmds.ThreadRequest;
 import com.android.xiaow.jx3bbs.db.SqliteConn;
-import com.android.xiaow.jx3bbs.model.MainArea;
 import com.android.xiaow.jx3bbs.model.RefuseInfo;
 
 /**
@@ -45,33 +43,20 @@ import com.android.xiaow.jx3bbs.model.RefuseInfo;
  * @date 2012-8-19 上午9:05:21
  * 
  */
-public class NewThreadFragment extends Fragment implements BranchListActivityCallBack {
+public class NewThreadActivity extends BaseFragmentActivity {
 
-    LoginFinishCallBack mCallBack;
     RefuseInfo mInfo;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (!(activity instanceof LoginFinishCallBack)) {
-            throw new IllegalStateException(
-                    "Activity must implement fragment's LoginFinishCallBack.");
-        }
-        mCallBack = (LoginFinishCallBack) activity;
-    }
+    public static final int RESULT_OK = 101;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Object obj = getArguments().getSerializable("Info");
+        setContentView(R.layout.newthread_fragment);
+        Object obj = getIntent().getSerializableExtra("Info");
         if (obj instanceof RefuseInfo) {
             mInfo = (RefuseInfo) obj;
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.newthread_fragment, null, false);
+        init();
     }
 
     Spinner spinner;
@@ -81,13 +66,11 @@ public class NewThreadFragment extends Fragment implements BranchListActivityCal
     String type = "0";
     List<String[]> datas;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        spinner = (Spinner) getView().findViewById(R.id.spinner1);
-        title = (EditText) getView().findViewById(R.id.editText1);
-        content = (EditText) getView().findViewById(R.id.editText2);
-        btn = (Button) getView().findViewById(R.id.button1);
+    private void init() {
+        spinner = (Spinner) findViewById(R.id.spinner1);
+        title = (EditText) findViewById(R.id.editText1);
+        content = (EditText) findViewById(R.id.editText2);
+        btn = (Button) findViewById(R.id.button1);
         btn.setOnClickListener(replayListener);
         SQLiteDatabase db = SqliteConn.getDatabase();
         Cursor cursor = db.query("type", null, "parent like \"%" + mInfo.parent + "%\"", null,
@@ -105,24 +88,10 @@ public class NewThreadFragment extends Fragment implements BranchListActivityCal
             cursor.moveToNext();
         }
         cursor.close();
-        spinner.setAdapter(new SpinnerAdapter(datas));
+        spinner.setAdapter(new SpinnerAdapter(this, datas));
         if (datas.size() > 0)
             type = datas.get(spinner.getSelectedItemPosition())[1];
 
-    }
-
-    @Override
-    public void onReset() {
-    }
-
-    @Override
-    public void loadBranch(MainArea branch) {
-
-    }
-
-    @Override
-    public RefuseInfo getInfo() {
-        return null;
     }
 
     View.OnClickListener replayListener = new View.OnClickListener() {
@@ -148,40 +117,22 @@ public class NewThreadFragment extends Fragment implements BranchListActivityCal
             request.subject = title.getText().toString();
             request.typeid = type;
             request.formhash = mInfo.formhash;
-            getView().setEnabled(false);
+            getWindow().getDecorView().setEnabled(false);
             Controller.getIntance().registerCommand(Initializer.THREAD_CMD_ID, request, listener);
             showDialog();
         }
     };
 
-    public class SpinnerAdapter extends BaseAdapter {
-        List<String[]> datas;
+    public class SpinnerAdapter extends AbstractAdapter<String[]> {
 
-        public SpinnerAdapter(List<String[]> datas) {
-            super();
-            this.datas = datas;
+        public SpinnerAdapter(Context context, List<String[]> data) {
+            super(context, data);
         }
 
         @Override
-        public int getCount() {
-            return datas.size();
-        }
-
-        @Override
-        public String[] getItem(int position) {
-            return datas.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View CreateView(int position, View convertView, LayoutInflater inflater) {
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(
-                        android.R.layout.simple_list_item_1, null, false);
+                convertView = inflater.inflate(android.R.layout.simple_list_item_1, null, false);
             }
             TextView tv = (TextView) convertView;
             tv.setText(getItem(position)[0]);
@@ -194,15 +145,15 @@ public class NewThreadFragment extends Fragment implements BranchListActivityCal
 
         @Override
         public void onSuccess(Response response) {
+            setResult(RESULT_OK);
             ToastUtil.show("发帖成功");
             hideDialog();
-            if (mCallBack != null)
-                mCallBack.loginFinish();
+            finish();
         }
 
         @Override
         public void onError(Response response) {
-            getView().setEnabled(true);
+            getWindow().getDecorView().setEnabled(true);
             ToastUtil.show("发帖失败");
             hideDialog();
         }
@@ -211,7 +162,7 @@ public class NewThreadFragment extends Fragment implements BranchListActivityCal
     ProgressDialog dialog;
 
     public void showDialog() {
-        dialog = new ProgressDialog(getActivity());
+        dialog = new ProgressDialog(this);
         dialog.setMessage("正在发帖...");
         dialog.show();
     }
